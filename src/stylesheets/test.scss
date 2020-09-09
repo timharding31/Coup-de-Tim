@@ -1,0 +1,11 @@
+@import './theme.scss';
+
+#root {
+  background: $cdt-white;
+}
+
+#root > h1 {
+  font-weight: 700;
+  font-size: 50px;
+  color: $cdt-blue;
+}
