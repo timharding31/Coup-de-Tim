@@ -1,0 +1,80 @@
+@import './theme.scss';
+
+.cards-list {
+  display: flex;
+  flex-direction: column;
+}
+
+#card {
+  width: 240px;
+  height: 336px;
+  position: relative;
+  border: 2px solid $cdt-black;
+  border-radius: 25px;
+  overflow: hidden;
+}
+
+.card-image {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  top: auto;
+}
+
+.card-symbol {
+  position: absolute;
+  width: 25%;
+  top: 2.5%;
+  left: 0;
+  right: auto;
+  bottom: auto;
+  z-index: 2;
+}
+
+.card-abilities {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: flex-start;
+  position: absolute;
+  width: 115%;
+  height: 15%;
+  bottom: 0;
+  left: -15%;
+  right: 0;
+  top: auto;
+  background-repeat: no-repeat;
+  background-size: 110% 95%;
+  padding: 0;
+  z-index: 1;
+  padding-top: 5%;
+  padding-bottom: 5%;
+}
+
+.card-abilities > li {
+  font-size: 12px;
+  color: $cdt-white;
+  padding-left: 20%;
+  padding-right: 2.5%;
+  margin: 0;
+}
+
+.card-header {
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  right: 2.5%;
+  top: 5%;
+  bottom: auto;
+  left: auto;
+  font-size: 40px;
+  text-shadow: 0.25px 0.25px 3px $cdt-black-shadow;
+}
+
+#card.captain .card-header { color: $cdt-blue }
+#card.duke .card-header { color: $cdt-purple }
+#card.ambassador .card-header { color: $cdt-green }
+#card.contessa .card-header { color: $cdt-red }
+#card.assassin .card-header { color: $cdt-black }
