@@ -9,9 +9,10 @@
   width: 240px;
   height: 336px;
   position: relative;
-  border: 2px solid $cdt-black;
+  border: 1px solid $cdt-black;
   border-radius: 25px;
   overflow: hidden;
+  background: $cdt-white;
 }
 
 .card-image {
@@ -21,6 +22,7 @@
   left: 0;
   right: 0;
   top: auto;
+  z-index: 1;
 }
 
 .card-symbol {
@@ -30,7 +32,7 @@
   left: 0;
   right: auto;
   bottom: auto;
-  z-index: 2;
+  z-index: 0;
 }
 
 .card-abilities {
@@ -46,19 +48,25 @@
   right: 0;
   top: auto;
   background-repeat: no-repeat;
-  background-size: 110% 95%;
+  background-size: 105% 95%;
   padding: 0;
-  z-index: 1;
+  z-index: 2;
   padding-top: 5%;
   padding-bottom: 5%;
+  opacity: 90%;
 }
 
 .card-abilities > li {
   font-size: 12px;
   color: $cdt-white;
-  padding-left: 20%;
-  padding-right: 2.5%;
+  padding-left: 19%;
+  padding-right: 4%;
   margin: 0;
+  text-shadow: 0.25px 0.25px 0px $cdt-white-shadow;
+}
+
+.card-abilities > li:last-child:not(:first-child) {
+  padding-top: 2.5%;
 }
 
 .card-header {
@@ -69,8 +77,9 @@
   top: 5%;
   bottom: auto;
   left: auto;
-  font-size: 40px;
-  text-shadow: 0.25px 0.25px 3px $cdt-black-shadow;
+  font-size: 36px;
+  text-shadow: 0.25px 0.25px 2px $cdt-black-shadow;
+  z-index: 0;
 }
 
 #card.captain .card-header { color: $cdt-blue }
