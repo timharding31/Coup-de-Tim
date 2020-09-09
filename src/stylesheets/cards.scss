@@ -15,6 +15,29 @@
   background: $cdt-white;
 }
 
+.card-texture {
+  position: absolute;
+  background-size: 50%;
+  background-repeat: repeat;
+  height: 100%;
+  width: 100%;
+  left: 0;
+  bottom: 0;
+  top: 0;
+  right: 0;
+}
+
+.card-tint {
+  position: absolute;
+  opacity: 0.25;
+  height: 100%;
+  width: 100%;
+  left: 0;
+  bottom: 0;
+  top: 0;
+  right: 0;
+}
+
 .card-image {
   position: absolute;
   width: 100%;
@@ -57,9 +80,10 @@
 }
 
 .card-abilities > li {
-  font-size: 12px;
+  font-size: 80%;
   color: $cdt-white;
-  padding-left: 19%;
+  text-indent: -5%;
+  padding-left: 24%;
   padding-right: 4%;
   margin: 0;
   text-shadow: 0.25px 0.25px 0px $cdt-white-shadow;
@@ -71,16 +95,25 @@
 
 .card-header {
   position: absolute;
+  transform: rotate(180deg);
   margin: 0;
   padding: 0;
   right: 2.5%;
   top: 5%;
   bottom: auto;
   left: auto;
-  font-size: 36px;
-  text-shadow: 0.25px 0.25px 2px $cdt-black-shadow;
+  font-size: 275%;
+  text-shadow: 0.25px 0.25px 0.5px $cdt-black-shadow;
+  font-weight: 700;
   z-index: 0;
+  writing-mode: vertical-lr;
 }
+
+#card.captain .card-tint { background-color: $cdt-blue }
+#card.duke .card-tint { background-color: $cdt-purple }
+#card.ambassador .card-tint { background-color: $cdt-green }
+#card.contessa .card-tint { background-color: $cdt-red }
+#card.assassin .card-tint { background-color: $cdt-black }
 
 #card.captain .card-header { color: $cdt-blue }
 #card.duke .card-header { color: $cdt-purple }
