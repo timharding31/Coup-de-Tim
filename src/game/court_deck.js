@@ -30,7 +30,7 @@ export default class CourtDeck {
 
   deal(num) {
     const dealtCards = this.deck.slice(0, num);
-    this.deck = this.deck.slice(num + 1);
+    this.deck = this.deck.slice(num);
     this.shuffle();
     return dealtCards;
   }
@@ -41,6 +41,17 @@ export default class CourtDeck {
   }
 
   render() {
-    return createElement('div', { class: 'court-deck' }, ...this.deck.map(card => card.render()));
+    let deckCount = this.deck.length;
+    return createElement('div',
+      {
+        class: 'court-deck',
+        style: `
+          display: grid;
+          grid-template-columns: repeat(${(deckCount + 1) * 3}, 2px);
+          grid-template-rows: 336px;
+          max-width: ${((deckCount + 1) * 3)}px;
+        `
+      }
+      , ...this.deck.map((card, idx) => card.render(deckCount, idx)));
   }
 }

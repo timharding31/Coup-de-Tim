@@ -1,5 +1,5 @@
 import createElement from '../util/create_element';
-import coinArray from '../util/coin_array';
+import createCoin from '../util/create_coin';
 
 export default class Treasury {
   constructor() {
@@ -17,6 +17,11 @@ export default class Treasury {
   }
 
   render() {
-    return createElement('div', { class: 'treasury' }, ...coinArray.slice(0, this.coins));
+    let coinsArray = new Array(this.coins).fill(1).map(_ => createCoin(160));
+    let coins = createElement('div',
+      { class: 'treasury', style: 'width: 200px; height: 200px;' },
+      ...coinsArray
+    );
+    return coins;
   }
 }

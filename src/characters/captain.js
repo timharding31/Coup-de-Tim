@@ -10,4 +10,5 @@ export default {
   effect: 'Take 2 coins from another player',
   counteraction: 'Blocks stealing',
   brushStroke: brush.default,
+  backgroundColor: 'rgba(55, 97, 113, 0.5)',
 }

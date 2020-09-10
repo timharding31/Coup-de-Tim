@@ -10,4 +10,5 @@ export default {
   effect: 'Take 3 coins from Treasury',
   counteraction: 'Blocks Foreign Aid',
   brushStroke: brush.default,
+  backgroundColor: 'rgba(138, 49, 123, 0.5)',
 }

@@ -10,4 +10,5 @@ export default {
   effect: 'Pay 3 coins to assassinate another player',
   counteraction: '',
   brushStroke: brush.default,
+  backgroundColor: 'rgba(22, 28, 29, 0.5)',
 }

@@ -10,4 +10,5 @@ export default {
   effect: '',
   counteraction: 'Blocks assassination',
   brushStroke: brush.default,
+  backgroundColor: 'rgba(155, 51, 42, 0.5)',
 }

@@ -1,4 +1,4 @@
-import coinArray from '../util/coin_array';
+import createCoin from '../util/create_coin';
 import createElement from '../util/create_element';
 
 export default class Player {
@@ -8,10 +8,19 @@ export default class Player {
     this.opponent = null;
     this.cards = game.courtDeck.deal(2);
     this.coins = game.treasury.dispense(2);
+    console.log(idx, this.coins, this.cards);
   }
 
   setOpponent() {
     this.opponent = this.game.players[(this.idx + 1) % 2];
+  }
+
+  flipAllCardsUp() {
+    this.cards.forEach(card => card.flipUp());
+  }
+
+  flipAllCardsDown() {
+    this.cards.forEach(card => card.flipDown());
   }
 
   returnInfleunce(idx, dead = true) {
@@ -96,13 +105,14 @@ export default class Player {
   }
 
   render() {
-    const hand = createElement('div',
-      { class: 'player-hand' },
+    let hand = createElement('div',
+      { class: 'player-cards' },
       ...this.cards.map(card => card.render())
     );
-    const coins = createElement('div',
+    let coinsArray = new Array(this.coins).fill(1).map(_ => createCoin());
+    let coins = createElement('div',
       { class: 'player-coins' },
-      ...coinArray.slice(0, this.coins)
+      ...coinsArray
     );
     return [hand, coins];
   }

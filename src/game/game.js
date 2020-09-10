@@ -7,22 +7,23 @@ export default class Game {
   constructor() {
     this.courtDeck = new CourtDeck();
     this.treasury = new Treasury();
-    this.players = [];
+    this.players = [new Player(1, this), new Player(2, this)];
     this.currentPlayer = null;
     this.currentTarget = null;
   }
 
   startGame() {
-    this.players = [new Player(0, this), new Player(1, this)];
     this.players.forEach(player => player.setOpponent());
-    this.currentPlayer = this.players[0];
-    this.currentTarget = this.players[1];
-    this.currentPlayer.cards.forEach(card => card.flipUp());
+    this.playerOne = this.players[0];
+    this.playerTwo = this.players[1];
+    this.currentPlayer = this.playerOne;
+    this.currentTarget = this.playerTwo;
+    this.playerOne.flipAllCardsUp();
   }
 
   switchTurns() {
-    this.currentPlayer = this.players[this.players.indexOf(this.currentPlayer) + 1 % 2];
-    this.currentTarget = this.players[this.players.indexOf(this.currentTarget) + 1 % 2];
+    this.currentPlayer = this.players[(this.players.indexOf(this.currentPlayer) + 1) % 2];
+    this.currentTarget = this.players[(this.players.indexOf(this.currentTarget) + 1) % 2];
   }
 
   turnStepOne(action, { wasBlocked, wasChallenged }) {
@@ -93,12 +94,12 @@ export default class Game {
   }
 
   gameOver() {
-    return ((this.currentPlayer.cards.length === 0) || (this.currentTarget.cards.length === 0))
+    return ((this.playerOne.cards.length === 0) || (this.playerTwo.cards.length === 0))
   }
 
   winner() {
     if (this.gameOver()) {
-      return this.players.filter(player => player.coins.length > 0)[0];
+      return [this.playerOne, this.playerTwo].filter(player => player.cards.length > 0)[0];
     } else {
       return null;
     }

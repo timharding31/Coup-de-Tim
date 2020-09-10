@@ -1,0 +1,60 @@
+@import './theme.scss';
+
+.turn-controls {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: baseline;
+  list-style: none;
+}
+
+.turn-control-list-item {
+  width: 50px;
+  height: 50px;
+  position: relative;
+  padding: 0;
+  border-radius: 30px;
+  cursor: pointer;
+  border: 2px solid $cdt-black;
+}
+
+.turn-action-icon {
+  width: 90%;
+  height: 90%;
+  position: absolute;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  top: 5%;
+  bottom: 5%;
+  left: 5%;
+  right: 5%;
+  border-radius: 30px;
+}
+
+.turn-control-list-item .tooltip-text {
+  visibility: hidden;
+  width: 200%;
+  background-color: $cdt-black;
+  color: $cdt-white;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+  position: absolute;
+  z-index: 2;
+  bottom: 110%;
+  left: 50%;
+  margin-left: -100%;
+}
+
+.turn-control-list-item:hover .tooltip-text {
+  visibility: visible;
+}
+
+.tooltip-text > p:first-child {
+  font-weight: 700;
+  font-size: 90%;
+}
+
+.tooltip-text > p:last-child {
+  font-size: 75%;
+}

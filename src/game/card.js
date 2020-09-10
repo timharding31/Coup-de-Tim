@@ -36,11 +36,15 @@ export default class Card {
     this.faceUp = true;
   }
 
-  render() {
-    if (this.faceUp) {
-      return createCard(this.options);
+  render(deckCount, idx) {
+    if (deckCount) {
+      return createFaceDownCard(deckCount, idx);
     } else {
-      return createFaceDownCard();
+      if (this.faceUp) {
+        return createCard(this.options);
+      } else {
+        return createFaceDownCard();
+      }
     }
   }
 }

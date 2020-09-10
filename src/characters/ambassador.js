@@ -10,4 +10,5 @@ export default {
   effect: 'Exchange cards with Court Deck',
   counteraction: 'Blocks stealing',
   brushStroke: brush.default,
+  backgroundColor: 'rgba(76, 152, 112, 0.5)',
 }
