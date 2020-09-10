@@ -1,21 +1,36 @@
 import './application.scss';
-import createElement from './util/createElement';
-import createCard from './util/createCard';
+import createElement from './util/create_element';
+import createCard from './util/create_card';
 import dukeOptions from './characters/duke';
 import assassinOptions from './characters/assassin';
 import ambassadorOptions from './characters/ambassador';
 import captainOptions from './characters/captain';
 import contessaOptions from './characters/contessa';
 
+import Card from './game/card';
+
 const header = createElement('h1', { text: 'Coup de Tim' });
 
-const dukeCard = createCard(dukeOptions);
-const assassinCard = createCard(assassinOptions);
-const ambassadorCard = createCard(ambassadorOptions);
-const captainCard = createCard(captainOptions);
-const contessaCard = createCard(contessaOptions);
+// const dukeCard = createCard(dukeOptions);
+// const assassinCard = createCard(assassinOptions);
+// const ambassadorCard = createCard(ambassadorOptions);
+// const captainCard = createCard(captainOptions);
+// const contessaCard = createCard(contessaOptions);
 
-const cards = createElement('div', { class: 'cards-list'}, dukeCard, assassinCard, ambassadorCard, captainCard, contessaCard);
+const cardsList = ['Duke', 'Assassin', 'Ambassador', 'Captain', 'Contessa'].map(character => {
+  let cCard = new Card(character);
+  cCard.flip();
+  return cCard.render();
+});
+
+let fCard = new Card('Duke');
+const faceDownCard = fCard.render();
+cardsList.push(faceDownCard);
+
+// const cardInstance = new Card('Captain');
+// const dynamicCard = cardInstance.render();
+
+const cards = createElement('div', { class: 'cards-list' }, ...cardsList);
 
 const root = createElement('div', { id: 'root' }, header, cards);
 

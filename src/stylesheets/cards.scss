@@ -2,7 +2,8 @@
 
 .cards-list {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  justify-content: space-around;
 }
 
 #card {
@@ -10,32 +11,64 @@
   height: 336px;
   position: relative;
   border: 1px solid $cdt-black;
-  border-radius: 25px;
+  border-radius: 20px;
   overflow: hidden;
-  background: $cdt-white;
-}
-
-.card-texture {
-  position: absolute;
-  background-size: 50%;
   background-repeat: repeat;
-  height: 100%;
-  width: 100%;
-  left: 0;
-  bottom: 0;
-  top: 0;
-  right: 0;
 }
 
 .card-tint {
   position: absolute;
-  opacity: 0.25;
+  opacity: 0.2;
   height: 100%;
   width: 100%;
   left: 0;
   bottom: 0;
   top: 0;
   right: 0;
+}
+
+.card-back {
+  position: absolute;
+  align-self: center;
+  background-size: 120%;
+  background-repeat: no-repeat;
+  opacity: 0.95;
+  left: -10%;
+  bottom: 25%;
+  top: 15%;
+  right: 0;
+}
+
+.card-back-header {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  transform: rotate(-10deg);
+  position: absolute;
+  width: 100%;
+  bottom: 45%;
+  top: 32%;
+  left: -5%;
+  right: -5%;
+}
+
+.card-back-header > h2 {
+  margin-left: 60%;
+  color: $cdt-white;
+  font-size: 235%;
+  text-shadow: 1px 1px $cdt-black-shadow;
+  font-weight: 700;
+  width: 100%;
+}
+
+.card-back-header > h2:first-child {
+  text-indent: -10%;
+  margin-bottom: -4%;
+}
+
+.card-back-header > h2:last-child {
+  text-indent: 10%;
 }
 
 .card-image {
@@ -102,7 +135,7 @@
   top: 5%;
   bottom: auto;
   left: auto;
-  font-size: 275%;
+  font-size: 285%;
   text-shadow: 0.25px 0.25px 0.5px $cdt-black-shadow;
   font-weight: 700;
   z-index: 0;
@@ -114,6 +147,8 @@
 #card.ambassador .card-tint { background-color: $cdt-green }
 #card.contessa .card-tint { background-color: $cdt-red }
 #card.assassin .card-tint { background-color: $cdt-black }
+
+#card.face-down .card-tint { background-color: $cdt-blue; opacity: 0.5; }
 
 #card.captain .card-header { color: $cdt-blue }
 #card.duke .card-header { color: $cdt-purple }

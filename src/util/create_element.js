@@ -9,9 +9,9 @@ export default (tag, props, ...children) => {
       element.setAttribute(name, value.toString());
     }
   });
-  for (let child of children) {
-    if (!child) continue;
+  children.forEach(child => {
+    if (!child) return;
     element.appendChild(child);
-  }
+  });
   return element;
 }

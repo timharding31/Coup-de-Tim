@@ -1,5 +1,5 @@
-import createElement from './createElement';
-const paper = require('../images/paper.png');
+import createElement from './create_element';
+const paper = require('../images/paper_texture.png');
 
 export default ({ character, image, symbol, effect, counteraction, brushStroke }) => {
   const characterImage = createElement('img', {
@@ -32,11 +32,6 @@ export default ({ character, image, symbol, effect, counteraction, brushStroke }
     style: `background-image: url("${brushStroke}");`,
   }, characterEffect, characterCounter);
 
-  const cardTexture = createElement('div', {
-    class: 'card-texture',
-    style: `background-image: url("${paper.default}");`,
-  });
-
   const cardTint = createElement('div', {
     class: 'card-tint',
   });
@@ -45,8 +40,9 @@ export default ({ character, image, symbol, effect, counteraction, brushStroke }
     {
       class: character.toLowerCase(),
       id: 'card',
+      style: `background-image: url("${paper.default}");`,
     },
-    cardTexture, cardTint, characterName, characterImage, characterSymbol, abilities
+    cardTint, characterName, characterImage, characterSymbol, abilities
   );
   return card;
 }
