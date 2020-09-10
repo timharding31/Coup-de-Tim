@@ -28,8 +28,12 @@ export default class Card {
     this.counteraction = renderOptionsMap[character].counteraction;
   }
 
-  flip() {
-    this.faceUp = !this.faceUp;
+  flipDown() {
+    this.faceUp = false;
+  }
+
+  flipUp() {
+    this.faceUp = true;
   }
 
   render() {

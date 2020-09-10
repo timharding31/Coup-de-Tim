@@ -7,6 +7,8 @@ import ambassadorOptions from './characters/ambassador';
 import captainOptions from './characters/captain';
 import contessaOptions from './characters/contessa';
 
+import Gameplay from './render/gameplay';
+
 import Card from './game/card';
 
 const header = createElement('h1', { text: 'Coup de Tim' });
@@ -19,7 +21,7 @@ const header = createElement('h1', { text: 'Coup de Tim' });
 
 const cardsList = ['Duke', 'Assassin', 'Ambassador', 'Captain', 'Contessa'].map(character => {
   let cCard = new Card(character);
-  cCard.flip();
+  cCard.flipUp();
   return cCard.render();
 });
 
@@ -35,3 +37,5 @@ const cards = createElement('div', { class: 'cards-list' }, ...cardsList);
 const root = createElement('div', { id: 'root' }, header, cards);
 
 document.body.appendChild(root);
+
+const g = new Gameplay(root);

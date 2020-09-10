@@ -17,6 +17,7 @@ export default class Game {
     this.players.forEach(player => player.setOpponent());
     this.currentPlayer = this.players[0];
     this.currentTarget = this.players[1];
+    this.currentPlayer.cards.forEach(card => card.flipUp());
   }
 
   switchTurns() {

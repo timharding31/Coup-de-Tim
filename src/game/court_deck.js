@@ -1,4 +1,6 @@
 import Card from './card';
+import createElement from '../util/create_element';
+import createCard from '../util/create_card';
 
 export default class CourtDeck {
   constructor() {
@@ -36,5 +38,9 @@ export default class CourtDeck {
   returnCard(card) {
     this.deck.push(card);
     this.shuffle();
+  }
+
+  render() {
+    return createElement('div', { class: 'court-deck' }, ...this.deck.map(card => card.render()));
   }
 }
