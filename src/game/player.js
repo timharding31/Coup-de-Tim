@@ -4,7 +4,6 @@ export default class Player {
     this.game = game;
     this.opponent = null;
     this.cards = game.courtDeck.deal(2);
-    this.cards.forEach(card => card.flip());
     this.coins = game.treasury.dispense(2);
   }
 
@@ -77,11 +76,11 @@ export default class Player {
   }
 
   steal() {
-    this.coins += 2;
+    this.coins += Math.min(2, this.opponent.coins);
   }
 
   receiveSteal() {
-    this.coins -= 2;
+    this.coins -= Math.min(2, this.coins);
   }
 
   exchangePartOne() {

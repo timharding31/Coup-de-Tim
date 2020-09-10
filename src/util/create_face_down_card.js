@@ -1,6 +1,6 @@
 import createElement from './create_element';
 const cardBack = require('../images//brush-stroke/card_back.png');
-const flower = require('../images/flower_texture.png');
+const intersection = require('../images/intersection_texture.png');
 
 export default () => {
   const img = createElement('div', { class: 'card-back', style: `background-image: url("${cardBack.default}");` });
@@ -14,7 +14,7 @@ export default () => {
     {
       class: 'face-down',
       id: 'card',
-      style: `background-image: url("${flower.default}");`,
+      style: `background-image: url("${intersection.default}");`,
     },
     tint, img, header
   );

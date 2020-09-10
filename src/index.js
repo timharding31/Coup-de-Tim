@@ -25,7 +25,7 @@ const cardsList = ['Duke', 'Assassin', 'Ambassador', 'Captain', 'Contessa'].map(
 
 let fCard = new Card('Duke');
 const faceDownCard = fCard.render();
-cardsList.push(faceDownCard);
+cardsList.unshift(faceDownCard);
 
 // const cardInstance = new Card('Captain');
 // const dynamicCard = cardInstance.render();
