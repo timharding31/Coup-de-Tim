@@ -1,3 +1,6 @@
+import coinArray from '../util/coin_array';
+import createElement from '../util/create_element';
+
 export default class Player {
   constructor(idx, game) {
     this.idx = idx;
@@ -90,5 +93,17 @@ export default class Player {
   exchangePartTwo(idx1, idx2) {
     this.returnInfleunce(idx1, false);
     this.returnInfleunce(idx2, false);
+  }
+
+  render() {
+    const hand = createElement('div',
+      { class: 'player-hand' },
+      ...this.cards.map(card => card.render())
+    );
+    const coins = createElement('div',
+      { class: 'player-coins' },
+      ...coinArray.slice(0, this.coins)
+    );
+    return [hand, coins];
   }
 }

@@ -16,32 +16,16 @@ export default class Gameplay {
   }
 
   renderCurrentPlayer() {
-    const currentPlayerHand = createElement('div',
-      { class: 'current-player-hand' },
-      ...this.game.currentPlayer.cards.map(card => card.render())
-    );
-    const currentPlayerCoins = createElement('div',
-      { class: 'current-player-coins' },
-      ...coinArray.slice(0, this.game.currentPlayer.coins)
-    );
     return createElement('div',
         { class: 'current-player-station' },
-        currentPlayerHand, currentPlayerCoins
+        ...this.game.currentPlayer.render()
     );
   }
 
   renderCurrentTarget() {
-    const currentTargetHand = createElement('div',
-      { class: 'current-target-hand' },
-      ...this.game.currentTarget.cards.map(card => card.render())
-    );
-    const currentTargetCoins = createElement('div',
-      { class: 'current-target-coins' },
-      ...coinArray.slice(0, this.game.currentTarget.coins)
-    );
     return createElement('div',
-        { class: 'current-target-station' },
-        currentTargetHand, currentTargetCoins
+      { class: 'target-player-station' },
+      ...this.game.currentTarget.render()
     );
   }
 
