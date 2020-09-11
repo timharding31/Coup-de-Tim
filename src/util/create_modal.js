@@ -1,9 +1,15 @@
 import createElement from './create_element';
 const regeneratorRuntime = require("regenerator-runtime");
 import Card from '../game/card';
+const intersection = require('../images/intersection_texture.png');
+import { removeAllChildNodes } from './dom_nodes_util';
 
 export default (type, action, currentPlayer, currentTarget) => {
   let submitButton = createElement('button', { id: 'submit', text: 'Submit' });
+  let tint = createElement('div', {
+    class: 'modal-tint',
+  })
+  let submitButtonContainer = createElement('div', { class: 'modal-submit-container' }, submitButton);
   let modalHeader;
   let buttonPlaceholder = createElement('div', { style: 'display: none' });
   let buttons = [buttonPlaceholder];
@@ -16,7 +22,11 @@ export default (type, action, currentPlayer, currentTarget) => {
         class: 'modal-response',
         id: 'modal-response-block',
         text: 'Block',
-        onClick: () => submitButton.setAttribute('data-was-blocked', true),
+        onClick: () => {
+          let that = document.getElementById('modal-response-block');
+          that.classList.add('selected');
+          submitButton.setAttribute('data-was-blocked', true)
+        }
       }
     );
     let challengeButton = createElement('button',
@@ -24,10 +34,14 @@ export default (type, action, currentPlayer, currentTarget) => {
         class: 'modal-response',
         id: 'modal-response-challenge',
         text: 'Challenge',
-        onClick: () => submitButton.setAttribute('data-was-challenged', true),
+        onClick: () => {
+          let that = document.getElementById('modal-response-challenge');
+          that.classList.add('selected');
+          submitButton.setAttribute('data-was-challenged', true)
+        }
       }
     );
-    buttons = createElement('div', { id: 'modal-buttons', class: 'modal-buttons' }, blockButton, challengeButton, submitButton);
+    buttons = createElement('div', { id: 'modal-buttons', class: 'modal-buttons' }, blockButton, challengeButton);
   } else if (type === 'player-choice') {
     let header;
     let subHeader;
@@ -101,9 +115,26 @@ export default (type, action, currentPlayer, currentTarget) => {
     }
     modalHeader = createElement('div', { class: 'modal-header' }, header);
     if (subHeader) modalHeader.appendChild(subHeader);
-    buttons = createElement('div', { id: 'modal-buttons', class: 'modal-buttons' }, ...cardButtons, submitButton);
+    buttons = createElement('div', { id: 'modal-buttons', class: 'modal-buttons' }, ...cardButtons);
+  } else if (type === 'game-over') {
+    header = createElement('p', { text: `Player ${currentPlayer.idx} has won the game!`})
+    subHeader = createElement('p', { text: 'Would you like to play again?' });
+    modalHeader = createElement('div', { class: 'modal-header' }, header, subHeader);
+    let exitButton = createElement('button',
+      {
+        class: 'modal-response', text: 'Exit', onClick: action.exitGame,
+      }
+    );
+    let replayButton = createElement('button',
+      {
+        class: 'modal-response',
+        text: 'Play Again',
+        onClick: action.playAgain
+      }
+    );
+    buttons = createElement('div', { id: 'modal-buttons', class: 'modal-buttons' }, replayButton, exitButton);
   }
 
-  let modal = createElement('div', { id: `modal-${type}`, class: `modal-${type}` }, modalHeader, buttons);
+  let modal = createElement('div', { id: `modal-${type}`, class: `modal-${type}`, style: `background-image: url("${intersection.default}")` }, tint, modalHeader, buttons, submitButtonContainer);
   return modal;
 }

@@ -18,7 +18,7 @@ const animateTopOfDeck = () => {
 export default class Gameplay {
   constructor(rootEl) {
     this.rootEl = rootEl;
-    rootEl.innerHTML = '';
+    removeAllChildNodes(rootEl);
     this.gameRoot = createElement('div', { id: 'game' });
     rootEl.appendChild(this.gameRoot);
     this.areas = {};
@@ -29,17 +29,16 @@ export default class Gameplay {
       this.areas[id] = area;
       return;
     });
-    // this.renderAll = this.renderAll.bind(this);
-    // this.turnSequence = this.turnSequence.bind(this);
-    // this.modalEventListener = this.modalEventListener.bind(this);
-    this.renderAll();
-  }
-
-  runGame() {
     this.game = new Game();
     this.game.startGame();
     this.renderAll();
   }
+
+  // runGame() {
+  //   this.game = new Game();
+  //   this.game.startGame();
+  //   this.renderAll();
+  // }
 
   turnCallback(type) {
     if (type === 'turn-end') {
@@ -77,15 +76,21 @@ export default class Gameplay {
 
 
   renderAll() {
-    if (this.game) {
+    if (this.game.gameOver()) {
+      let gameWinner = this.game.winner();
+      let exitGame = () => removeAllChildNodes(this.rootEl);
+      let playAgain = () => new Gameplay(this.rootEl);
+      let gameOverModal = createModal('game-over', { exitGame: exitGame.bind(this), playAgain: playAgain.bind(this) }, gameWinner, null);
+      removeAllChildNodes(this.areas['modal']);
+      this.areas['modal'].appendChild(gameOverModal);
+    } else {
       this.game.currentPlayer.flipAllCardsUp();
       this.game.currentTarget.flipAllCardsDown();
       this.renderControls();
       this.renderCourt();
       this.renderPlayerTwo();
       this.renderPlayerOne();
-    } else {
-      this.areas['game-controls'].appendChild(createElement('buttton', { id: 'start-game', text: 'Start Game', onClick: () => this.runGame() }));
+      // this.areas['game-controls'].appendChild(createElement('buttton', { id: 'start-game', text: 'Start Game', onClick: () => this.runGame() }));
     }
     // this.rootEl.innerHTML = '';
     // this.rootEl.appendChild(createElement('div',
