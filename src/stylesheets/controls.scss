@@ -9,14 +9,15 @@
 }
 
 .turn-control-list-item {
-  width: 50px;
-  height: 50px;
+  width: 70px;
+  height: 70px;
   position: relative;
   padding: 0;
-  border-radius: 30px;
+  border-radius: 35px;
   cursor: pointer;
   border: 2px solid $cdt-black;
   box-shadow: 0 0 5px $cdt-black-shadow;
+  margin-bottom: 5%;
 }
 
 .turn-action-icon {
@@ -60,14 +61,59 @@
 
 .tooltip-text > p:first-child {
   font-weight: 700;
-  font-size: 90%;
+  font-size: 125%;
   padding-top: 2.5%;
   padding-bottom: 2.5%;
 }
 
 .tooltip-text > p:last-child {
-  font-size: 75%;
+  font-size: 90%;
   padding-top: 2.5%;
   padding-bottom: 2.5%;
 }
 
+.current-player-controls {
+  position: relative;
+}
+
+.control-description {
+  position: absolute;
+  height: 60px;
+  width: 300%;
+  bottom: 105%;
+  left: -100%;
+  right: -100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: $cdt-black-tooltip;
+  box-shadow: 0 0 5px $cdt-white-shadow;
+  border-radius: 6px;
+  z-index: 10;
+}
+
+.control-description:after {
+  content: " ";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -10px;
+  border-width: 10px;
+  border-style: solid;
+  border-color: $cdt-black-tooltip transparent transparent transparent;
+}
+
+.control-description > p {
+  text-align: center;
+  color: $cdt-white;
+}
+
+.control-description > p:first-child {
+  font-weight: 700;
+  font-size: 125%;
+}
+
+.control-description > p:last-child {
+  font-size: 90%;
+}

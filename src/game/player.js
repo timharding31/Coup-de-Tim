@@ -107,6 +107,12 @@ export default class Player {
   }
 
   render() {
+    let playerName = createElement('div',
+      {
+        class: 'player-name',
+        text: `<h1>Player ${this.idx === 1 ? 'One' : 'Two'}</h2>`,
+      }
+    );
     let hand = createElement('div',
       { class: 'player-cards' },
       ...this.cards.map(card => card.render())
@@ -116,6 +122,6 @@ export default class Player {
       { class: 'player-coins' },
       ...coinsArray
     );
-    return [hand, coins];
+    return [playerName, hand, coins];
   }
 }

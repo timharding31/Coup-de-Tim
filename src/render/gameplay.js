@@ -51,46 +51,6 @@ export default class Gameplay {
     }
   }
 
-  // async turnSequence(returnObj) {
-  //   await this.game.turnStepOne(returnObj)
-  //     .then(action => this.game.turnStepTwo(action))
-  //     .then(action => this.displayTargetChoiceModal(action))
-  //     .then(returnObj => this.game.turnStepThree(returnObj))
-  //     .finally(_ => this.renderAll());
-  // }
-
-  // displayTargetChoiceModal(action) {
-  //   return new Promise(() => ({ action, idx1: 1, idx2: 1 }));
-  // }
-
-  // modalEventListener(action) {
-  //   let returnObj = { action, wasBlocked: false, wasChallenged: false };
-  //   let modal = document.getElementById('modal-block-challenge');
-  //   [...modal.childNodes].forEach(child => child.addEventListener('click', () => {
-  //     let classListArray = [...modal.classList];
-  //     if (classListArray.includes('blocked')) {
-  //       returnObj.wasBlocked = true;
-  //     } else if (classListArray.includes('challenged')) {
-  //       returnObj.wasChallenged = true;
-  //     }
-  //     debugger
-  //     return new Promise(() => this.turnSequence(returnObj));
-  //   }));
-  // }
-
-  // receiveModalResponse(returnObj) {
-  //   const newReturnObj = { ...returnObj };
-  //   let mod = document.getElementById('modal-block-challenge');
-  //   let classListArray = [...mod.classList];
-  //   if (classListArray.includes('blocked')) {
-  //     returnObj.wasBlocked = true;
-  //   } else if (classListArray.includes('challenged')) {
-  //     returnObj.wasChallenged = true;
-  //   }
-  //   debugger
-  //   return newReturnObj;
-  // }
-
   renderCourt() {
     let courtRendered = [this.game.courtDeck.render(), this.game.treasury.render()]
     removeAllChildNodes(this.areas['court']);
@@ -117,7 +77,6 @@ export default class Gameplay {
 
 
   renderAll() {
-    // debugger
     if (this.game) {
       this.game.currentPlayer.flipAllCardsUp();
       this.game.currentTarget.flipAllCardsDown();

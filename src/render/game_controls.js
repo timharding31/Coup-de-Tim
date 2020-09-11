@@ -44,6 +44,6 @@ export default (rootEl, currentPlayer, game, turnEndCallback) => {
       ...turnControl(option.symbol, option.action, option.effect));
   }));
 
-  let controls = createElement('div', { class: 'current-player-controls', text: `<h2>Player ${currentPlayer.idx}'s Turn</h2><p>Choose an option below</p>` }, controlsList);
+  let controls = createElement('div', { class: 'current-player-controls', text: `<div class="control-description"><p>Player ${currentPlayer.idx}'s Turn</p><p>Choose an option below</p></div>` }, controlsList);
   return controls;
 }

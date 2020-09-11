@@ -4,7 +4,7 @@
   padding-top: 3%;
   width: 100%;
   height: 100%;
-  min-height: 735px;
+  min-height: 775px;
   max-height: 1000px;
   display: flex;
   flex-direction: column;
@@ -13,9 +13,44 @@
   position: relative;
 }
 
+#player-one > .player-name {
+  position: absolute;
+  top: -10%;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  right: auto;
+  bottom: auto;
+  width: 90%;
+  height: 10%;
+}
+#player-two > .player-name {
+  position: absolute;
+  top: auto;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  right: auto;
+  bottom: -7%;
+  width: 90%;
+  height: 10%;
+}
+
+.player-name > h1 {
+  font-size: 225%;
+  font-weight: 700;
+  transform: rotate(-2deg);
+  text-shadow: 1px 1px $cdt-black;
+}
+
+#player-two > .player-name > h1 { color: $cdt-blue }
+#player-one > .player-name > h1 { color: $cdt-red }
+
 #player-one {
   position: absolute;
-  top: 3%;
+  top: 5%;
   bottom: auto;
   left: 25%;
   right: auto;
@@ -25,11 +60,14 @@
   justify-content: center;
   margin-left: -10%;
   margin-bottom: -13%;
+  padding-bottom: 1.25%;
+  border-bottom: 2px solid $cdt-black-shadow;
 }
+
 #player-two {
   position: absolute;
   top: auto;
-  bottom: 3%;
+  bottom: 5%;
   left: 25%;
   right: auto;
   display: flex;
@@ -38,6 +76,7 @@
   justify-content: center;
   margin-left: -10%;
   margin-top: -13%;
+  padding-top: 1.25%;
 }
 
 #court {
@@ -72,6 +111,9 @@
   width: 100%;
   height: 350px;
 }
+
+#player-one .player-cards { align-items: flex-end; }
+#player-two .player-cards { align-items: flex-start; }
 
 .player-coins {
   display: flex;
@@ -110,7 +152,7 @@
 
 #game-controls {
   position: absolute;
-  left: 2%;
+  left: 7%;
   top: 25%;
   bottom: 25%;
   height: 50%;

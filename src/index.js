@@ -36,5 +36,5 @@ import Card from './game/card';
 const root = createElement('div', { id: 'root', style: `background-image: url("${stucco.default}")` });
 
 document.body.appendChild(root);
-window.parent.document.body.style.zoom = 0.9;
+window.parent.document.body.style.zoom = 0.85;
 const g = new Gameplay(root);
