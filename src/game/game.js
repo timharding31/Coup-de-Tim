@@ -10,6 +10,9 @@ export default class Game {
     this.players = [new Player(1, this), new Player(2, this)];
     this.currentPlayer = null;
     this.currentTarget = null;
+    this.turnStepOne = this.turnStepOne.bind(this);
+    this.turnStepTwo = this.turnStepTwo.bind(this);
+    this.turnStepThree = this.turnStepThree.bind(this);
   }
 
   startGame() {
@@ -18,7 +21,6 @@ export default class Game {
     this.playerTwo = this.players[1];
     this.currentPlayer = this.playerOne;
     this.currentTarget = this.playerTwo;
-    this.playerOne.flipAllCardsUp();
   }
 
   switchTurns() {
@@ -26,70 +28,76 @@ export default class Game {
     this.currentTarget = this.players[(this.players.indexOf(this.currentTarget) + 1) % 2];
   }
 
-  turnStepOne(action, { wasBlocked, wasChallenged }) {
-    if (['Income', 'Coup'].includes(action)) return action;
-    if (wasBlocked) return;
-    if (wasChallenged) {
+  turnStepOne({ action, wasBlocked, wasChallenged }) {
+    if (['Income', 'Coup'].includes(action)) return this.turnStepTwo(action);
+    if (Boolean(JSON.parse(wasBlocked))) return this.turnStepTwo();
+    if (Boolean(JSON.parse(wasChallenged))) {
       let proven = this.currentPlayer.prove(action);
       if (proven) {
-        return action;
+        return this.turnStepTwo(action);
       } else {
-        return;
+        return this.turnStepTwo('Lost Challenge');
       }
     }
+    return this.turnStepTwo(action);
   }
 
   turnStepTwo(action) {
     switch(action) {
       case 'Income':
         this.currentPlayer.income();
+        this.readyForStepThree = true;
         return action;
       case 'Foreign Aid':
         this.currentPlayer.foreignAid();
+        this.readyForStepThree = true;
         return action;
       case 'Coup':
         this.currentPlayer.coup();
-        // this.promptKillIndex()
-        //   .then(idx => this.currentTarget.receiveCoup(idx));
+        this.readyForStepThree = true;
         return action;
       case 'Tax':
         this.currentPlayer.tax();
+        this.readyForStepThree = true;
         return action;
       case 'Assassinate':
         this.currentPlayer.assassinate();
-        // this.promptKillIndex()
-        //   .then(idx => this.currentTarget.receiveAssassinate(idx));
+        this.readyForStepThree = true;
         return action;
       case 'Steal':
         this.currentPlayer.steal();
-        this.currentTarget.receiveSteal();
+        this.readyForStepThree = true;
         return action;
       case 'Exchange':
         this.currentPlayer.exchangePartOne();
-        // this.promptExchangeIndices()
-        //   .then(([idx1, idx2]) => this.currentPlayer.exchangePartTwo(idx1, idx2));
+        this.readyForStepThree = true;
         return action;
       default:
+        this.readyForStepThree = true;
         return action;
     }
   }
 
-  turnStepThree(action, { idx1, idx2 }) {
+  turnStepThree({ action, idx1, idx2 }) {
+    this.readyForStepThree = false;
     switch(action) {
       case 'Exchange':
-        this.currentPlayer.exchangePartTwo(idx1, idx2);
-        return;
+        this.currentPlayer.exchangePartTwo(Number(idx1), Number(idx2));
+        return 'Turn Complete';
       case 'Coup':
-        this.currentTarget.receiveCoup(idx1);
-        return;
+        this.currentTarget.receiveCoup(Number(idx1));
+        return 'Turn Complete';
       case 'Assassinate':
-        this.currentTarget.receiveAssassinate(idx1);
-        return;
+        this.currentTarget.receiveAssassinate(Number(idx1));
+        return 'Turn Complete';
       case 'Steal':
         this.currentTarget.receiveSteal();
-        return;
+        return 'Turn Complete';
+      case 'Lost Challenge':
+        this.currentTarget.returnInfluence(Number(idx1), true);
+        return 'Turn Complete';
       default:
-        return;
+        return 'Turn Complete';
     }
   }
 

@@ -22,6 +22,7 @@ export default (deckCount, idx) => {
           background-image: url("${intersection.default}");
           grid-row-start: 1;
           grid-column: ${colStart} / ${colEnd};
+          margin-top: ${5 * Math.random()}px;
           `,
       },
       tint, img, header

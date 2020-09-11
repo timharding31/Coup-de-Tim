@@ -1,10 +1,12 @@
 import createElement from '../util/create_element';
+import createModal from '../util/create_modal';
 import turnControl from '../util/turn_control';
 import dukeOptions from '../characters/duke';
 import assassinOptions from '../characters/assassin';
 import ambassadorOptions from '../characters/ambassador';
 import captainOptions from '../characters/captain';
 import contessaOptions from '../characters/contessa';
+import Turn from './turn';
 
 const incomeSymbol = require('../images/symbols/income.png');
 const foreignAidSymbol = require('../images/symbols/foreign_aid.png');
@@ -27,18 +29,21 @@ const constOptions = [
 
 const allOptions = [...constOptions, ...characterOptions];
 
-export default (currentPlayer, turnActions) => {
+export default (rootEl, currentPlayer, game, turnEndCallback) => {
   let playerActions = currentPlayer.cards.map(card => card.action);
 
-  return createElement('ul', { class: 'turn-controls' }, ...allOptions.map((option, idx) => {
+  let controlsList = createElement('ul', { class: 'turn-controls' }, ...allOptions.map((option, idx) => {
     if (option.action === 'Coup' && currentPlayer.coins < 7) return;
     if (option.action === 'Assassinate' && currentPlayer.coins < 3) return;
     return createElement('li',
       {
         class: 'turn-control-list-item',
-        onClick: () => turnActions[option.action](),
+        onClick: () => (new Turn(rootEl, game, option.action, turnEndCallback)),
         style: `background-color: ${((idx < 2) || (idx === 2 && currentPlayer.coins >= 7) || (idx > 2 && playerActions.includes(option.action))) ? option.backgroundColor : 'transparent'}`,
       },
       ...turnControl(option.symbol, option.action, option.effect));
   }));
+
+  let controls = createElement('div', { class: 'current-player-controls', text: `<h2>Player ${currentPlayer.idx}'s Turn</h2><p>Choose an option below</p>` }, controlsList);
+  return controls;
 }

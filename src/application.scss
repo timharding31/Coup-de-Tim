@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&family=Lato:wght@100;300;400;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
 
 @import './stylesheets/reset.scss';
 
@@ -6,3 +6,6 @@
 @import './stylesheets/cards.scss';
 @import './stylesheets/controls.scss';
 @import './stylesheets/game.scss';
+@import './stylesheets/modal.scss';
+
+#root { width: 100%; height: 100%; min-height: 1000px; background-size: 500px 500px; background-repeat: repeat; }

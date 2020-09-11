@@ -8,6 +8,7 @@ import captainOptions from './characters/captain';
 import contessaOptions from './characters/contessa';
 
 import Gameplay from './render/gameplay';
+const stucco = require('./images/stucco_texture.png');
 
 import Card from './game/card';
 
@@ -32,7 +33,7 @@ import Card from './game/card';
 
 // const cards = createElement('div', { class: 'cards-list' }, ...cardsList);
 
-const root = createElement('div', { id: 'root' });
+const root = createElement('div', { id: 'root', style: `background-image: url("${stucco.default}")` });
 
 document.body.appendChild(root);
 window.parent.document.body.style.zoom = 0.9;

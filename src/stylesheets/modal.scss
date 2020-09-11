@@ -1,0 +1,73 @@
+#modal.not-present { display: none; }
+
+#modal.present {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: $cdt-black-modal;
+  z-index: 10;
+}
+
+.modal-block-challenge, .modal-player-choice {
+  width: 60%;
+  height: 70%;
+  margin-top: 3%;
+  margin-left: 20%;
+  margin-right: 20%;
+  margin-bottom: 3%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  background-color: $cdt-white;
+  padding-top: 10%;
+  border-radius: 20px;
+}
+
+#modal-buttons #card {
+  transform: scale(0.7);
+}
+
+.modal-header {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.modal-header > p:first-child {
+  width: 100%;
+  justify-content: center;
+  display: flex;
+  flex-direction: row;
+  line-height: 30px;
+  margin-bottom: 2%;
+}
+
+.modal-header > p:last-child:not(:first-child) {
+  font-style: italic;
+  font-weight: 500;
+  color: $cdt-red;
+  font-size: 110%;
+}
+
+.modal-header-action {
+  padding-left: 3px;
+  font-weight: 700;
+  font-size: 125%;
+}
+
+.modal-buttons {
+  display: flex;
+  flex-direction: row;
+  height: 40%;
+  width: 80%;
+  justify-content: space-evenly;
+  align-items: baseline;
+}
+

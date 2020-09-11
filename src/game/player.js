@@ -8,11 +8,10 @@ export default class Player {
     this.opponent = null;
     this.cards = game.courtDeck.deal(2);
     this.coins = game.treasury.dispense(2);
-    console.log(idx, this.coins, this.cards);
   }
 
   setOpponent() {
-    this.opponent = this.game.players[(this.idx + 1) % 2];
+    this.opponent = this.game.players[(this.idx) % 2];
   }
 
   flipAllCardsUp() {
@@ -23,11 +22,11 @@ export default class Player {
     this.cards.forEach(card => card.flipDown());
   }
 
-  returnInfleunce(idx, dead = true) {
+  returnInfluence(idx, dead = true) {
     let lostCard = this.cards[idx];
     this.cards = [...this.cards.slice(0, idx), ...this.cards.slice(idx + 1)];
     if (dead) {
-      this.game.faceUpCards.push(lostCard);
+      this.game.courtDeck.faceUpCards.push(lostCard);
     } else {
       this.game.courtDeck.returnCard(lostCard);
     }
@@ -50,7 +49,7 @@ export default class Player {
     const handIndex = this.cards.map(card => card.action).indexOf(action);
     if (handIndex > -1) {
       proven = true;
-      this.returnInfleunce(handIndex, false);
+      this.returnInfluence(handIndex, false);
       this.cards = [...this.cards, ...this.game.courtDeck.deal(1)];
     } else {
       proven = false;
@@ -72,7 +71,7 @@ export default class Player {
   }
 
   receiveCoup(idx) {
-    this.returnInfleunce(idx, true);
+    this.returnInfluence(idx, true);
   }
 
   tax() {
@@ -84,7 +83,7 @@ export default class Player {
   }
 
   receiveAssassinate(idx) {
-    this.returnInfleunce(idx, true);
+    this.returnInfluence(idx, true);
   }
 
   steal() {
@@ -96,12 +95,15 @@ export default class Player {
   }
 
   exchangePartOne() {
-    this.cards = [...this.cards, ...this.game.courtDeck.deal(2)];
+    this.cards = this.cards.concat(this.game.courtDeck.deal(2));
   }
 
   exchangePartTwo(idx1, idx2) {
-    this.returnInfleunce(idx1, false);
-    this.returnInfleunce(idx2, false);
+    const [sortedIdx1, sortedIdx2] = [idx1, idx2].sort();
+    let card1 = this.cards[sortedIdx1];
+    let card2 = this.cards[sortedIdx2];
+    [card1, card2].forEach(card => this.game.courtDeck.returnCard(card));
+    this.cards = [...this.cards.slice(0, sortedIdx1), ...this.cards.slice(sortedIdx1 + 1, sortedIdx2), ...this.cards.slice(sortedIdx2 + 1)]
   }
 
   render() {

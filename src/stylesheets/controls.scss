@@ -2,9 +2,9 @@
 
 .turn-controls {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-around;
-  align-items: baseline;
+  align-items: center;
   list-style: none;
 }
 
@@ -16,6 +16,7 @@
   border-radius: 30px;
   cursor: pointer;
   border: 2px solid $cdt-black;
+  box-shadow: 0 0 5px $cdt-black-shadow;
 }
 
 .turn-action-icon {
@@ -33,17 +34,24 @@
 
 .turn-control-list-item .tooltip-text {
   visibility: hidden;
-  width: 200%;
+  width: 300%;
+  height: 75%;
   background-color: $cdt-black;
   color: $cdt-white;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: auto;
   padding: 5px 0;
   border-radius: 6px;
   position: absolute;
-  z-index: 2;
-  bottom: 110%;
-  left: 50%;
-  margin-left: -100%;
+  z-index: 3;
+  top: 0;
+  bottom: 0;
+  left: 110%;
+  opacity: 0.9;
+  box-shadow: 0 0 5px $cdt-white-shadow;
 }
 
 .turn-control-list-item:hover .tooltip-text {
@@ -53,8 +61,13 @@
 .tooltip-text > p:first-child {
   font-weight: 700;
   font-size: 90%;
+  padding-top: 2.5%;
+  padding-bottom: 2.5%;
 }
 
 .tooltip-text > p:last-child {
   font-size: 75%;
+  padding-top: 2.5%;
+  padding-bottom: 2.5%;
 }
+

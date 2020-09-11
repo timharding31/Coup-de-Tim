@@ -6,6 +6,7 @@ export default class CourtDeck {
   constructor() {
     this.deck = this.buildDeck();
     this.shuffle();
+    this.faceUpCards = [];
   }
 
   buildDeck()  {
@@ -41,8 +42,13 @@ export default class CourtDeck {
   }
 
   render() {
+    let renderedUpCards;
+    if (this.faceUpCards.length) {
+      this.faceUpCards.forEach(card => card.flipUp());
+      renderedUpCards = createElement('div', { class: 'discard-pile' }, ...this.faceUpCards.map(card => card.render()));
+    }
     let deckCount = this.deck.length;
-    return createElement('div',
+    let renderedCourtDeck = createElement('div',
       {
         class: 'court-deck',
         style: `
@@ -52,6 +58,10 @@ export default class CourtDeck {
           max-width: ${((deckCount + 1) * 3)}px;
         `
       }
-      , ...this.deck.map((card, idx) => card.render(deckCount, idx)));
+      , ...this.deck.map((card, idx) => card.render(deckCount, idx))
+    );
+    let renderedAllCards = createElement('div', { class: 'all-cards' }, renderedCourtDeck);
+    if (renderedUpCards) renderedAllCards.appendChild(renderedUpCards);
+    return renderedAllCards;
   }
 }
