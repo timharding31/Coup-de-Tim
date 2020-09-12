@@ -1,5 +1,6 @@
 import createCoin from '../util/create_coin';
 import createElement from '../util/create_element';
+const moment = require('moment');
 
 export default class Player {
   constructor(idx, game) {
@@ -8,6 +9,8 @@ export default class Player {
     this.opponent = null;
     this.cards = game.courtDeck.deal(2);
     this.coins = game.treasury.dispense(2);
+    let now = moment().format('h:mm:ss a');
+    this.gameLog = [{ time: now, msg: 'Welcome to Coup de Tim! Come back here later to view a helpful game log' }];
   }
 
   setOpponent() {
@@ -49,8 +52,11 @@ export default class Player {
     const handIndex = this.cards.map(card => card.action).indexOf(action);
     if (handIndex > -1) {
       proven = true;
+      let returnedCard = this.cards[handIndex];
       this.returnInfluence(handIndex, false);
       this.cards = [...this.cards, ...this.game.courtDeck.deal(1)];
+      let now = moment().format('h:mm:ss a');
+      this.gameLog.push({ time: now, msg: `You received a new card after your opponent challenged your ${returnedCard.character}` });
     } else {
       proven = false;
     }
@@ -122,6 +128,10 @@ export default class Player {
       { class: 'player-coins' },
       ...coinsArray
     );
+    let messages = this.gameLog.map(message => createElement('li', { text: `<p>Time: ${message.time}</p><p>${message.msg}</p>`}))
+    let messageList = createElement('ul', { class: 'game-log' }, ...messages);
+    let messageTrigger = createElement('div', { class: 'game-log-hover-trigger' }, messageList);
+    playerName.appendChild(messageTrigger);
     return [playerName, hand, coins];
   }
 }

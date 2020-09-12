@@ -1,6 +1,7 @@
 import CourtDeck from './court_deck';
 import Treasury from './treasury';
 import Player from './player';
+const moment = require('moment');
 
 
 export default class Game {
@@ -34,7 +35,12 @@ export default class Game {
     if (Boolean(JSON.parse(wasChallenged))) {
       let proven = this.currentPlayer.prove(action);
       if (proven) {
-        return this.turnStepTwo(action);
+        let rand = Math.round(Math.random());
+        let lostCard = this.currentTarget.cards[rand];
+        this.currentTarget.returnInfluence(rand, true);
+        let now = moment().format('h:mm:ss a');
+        this.currentTarget.gameLog.push({ time: now, msg: `You lost your ${lostCard.character} due to an unsuccessful challenge` });
+        return this.turnStepOne({ action, wasBlocked: false, wasChallenged: false });
       } else {
         return this.turnStepTwo('Lost Challenge');
       }
@@ -94,7 +100,10 @@ export default class Game {
         this.currentTarget.receiveSteal();
         return 'Turn Complete';
       case 'Lost Challenge':
-        this.currentTarget.returnInfluence(Number(idx1), true);
+        let lostCard = this.currentPlayer.cards[idx1];
+        let now = moment().format('h:mm:ss a');
+        this.currentPlayer.returnInfluence(Number(idx1), true);
+        this.currentPlayer.gameLog.push({ time: now, msg: `You lost your ${lostCard.character} because your opponent successfully challenged` });
         return 'Turn Complete';
       default:
         return 'Turn Complete';

@@ -41,7 +41,11 @@ export default class Gameplay {
   // }
 
   turnCallback(type) {
-    if (type === 'turn-end') {
+    if (this.game.gameOver()) {
+      removeAllChildNodes(this.areas['modal']);
+      this.renderAll();
+    }
+    else if (type === 'turn-end') {
       this.game.switchTurns();
       this.renderAll();
     } else if (type == 'mid-turn-render') {

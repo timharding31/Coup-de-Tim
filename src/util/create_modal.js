@@ -5,17 +5,26 @@ const intersection = require('../images/intersection_texture.png');
 import { removeAllChildNodes } from './dom_nodes_util';
 
 export default (type, action, currentPlayer, currentTarget) => {
-  let submitButton = createElement('button', { id: 'submit', text: 'Submit' });
+  let submitButton = createElement('button',
+    {
+      id: 'submit',
+      text: 'Submit',
+      'data-was-blocked': false,
+      'data-was-challenged': false
+    }
+  );
   let tint = createElement('div', {
     class: 'modal-tint',
   })
   let submitButtonContainer = createElement('div', { class: 'modal-submit-container' }, submitButton);
   let modalHeader;
+  let header;
+  let subHeader;
   let buttonPlaceholder = createElement('div', { style: 'display: none' });
   let buttons = [buttonPlaceholder];
   if (type === 'block-challenge') {
-    let header = createElement('p', { text: `Player ${currentPlayer.idx} has chosen to <p class="modal-header-action">${action}</p>` });
-    let subHeader = createElement('p', { text: `Will Player ${currentTarget.idx} allow them to continue?`});
+    header = createElement('p', { text: `Player ${currentPlayer.idx} has chosen to <p class="modal-header-action">${action}</p>` });
+    subHeader = createElement('p', { text: `Will Player ${currentTarget.idx} allow them to continue?`});
     modalHeader = createElement('div', { class: 'modal-header' }, header, subHeader);
     let blockButton = createElement('button',
       {
@@ -24,8 +33,8 @@ export default (type, action, currentPlayer, currentTarget) => {
         text: 'Block',
         onClick: () => {
           let that = document.getElementById('modal-response-block');
-          that.classList.add('selected');
-          submitButton.setAttribute('data-was-blocked', true)
+          that.classList.toggle('selected');
+          submitButton.setAttribute('data-was-blocked', Boolean(!JSON.parse(submitButton.getAttribute('data-was-blocked'))))
         }
       }
     );
@@ -36,15 +45,13 @@ export default (type, action, currentPlayer, currentTarget) => {
         text: 'Challenge',
         onClick: () => {
           let that = document.getElementById('modal-response-challenge');
-          that.classList.add('selected');
-          submitButton.setAttribute('data-was-challenged', true)
+          that.classList.toggle('selected');
+          submitButton.setAttribute('data-was-challenged', Boolean(!JSON.parse(submitButton.getAttribute('data-was-challenged'))))
         }
       }
     );
     buttons = createElement('div', { id: 'modal-buttons', class: 'modal-buttons' }, blockButton, challengeButton);
   } else if (type === 'player-choice') {
-    let header;
-    let subHeader;
     let cardButtons = [buttonPlaceholder];
     if (action === 'Assassinate' || action === 'Coup') {
       header = createElement('p', { text: `Player ${currentPlayer.idx}'s<p class="modal-header-action">${action}</p> was successful.` });
@@ -59,7 +66,7 @@ export default (type, action, currentPlayer, currentTarget) => {
             onClick: () => {
               submitButton.setAttribute('data-idx1', idx);
               let that = document.getElementById(`card-choice-${idx}`);
-              that.classList.add('selected');
+              that.classList.toggle('selected');
             }
           }, cardFaceUp.render()
         );
@@ -77,7 +84,7 @@ export default (type, action, currentPlayer, currentTarget) => {
             onClick: () => {
               submitButton.setAttribute('data-idx1', idx);
               let that = document.getElementById(`card-choice-${idx}`);
-              that.classList.add('selected');
+              that.classList.toggle('selected');
             }
           }, cardFaceUp.render()
         );
@@ -100,7 +107,7 @@ export default (type, action, currentPlayer, currentTarget) => {
                 submitButton.setAttribute('data-idx1', idx);
               }
               let that = document.getElementById(`card-choice-${idx}`);
-              that.classList.add('selected');
+              that.classList.toggle('selected');
             }
           },
           cardFaceUp.render()

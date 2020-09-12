@@ -172,3 +172,19 @@
   right: 0;
   top: 0;
 }
+
+.game-log-hover-trigger {
+  width: 50px;
+  height: 50px;
+  background-color: gray;
+}
+
+.game-log-hover-trigger > .game-log {
+  visibility: hidden;
+  position: absolute;
+  list-style: none;
+}
+
+.game-log-hover-trigger:hover > .game-log {
+  visibility: visible;
+}
