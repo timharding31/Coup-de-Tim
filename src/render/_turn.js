@@ -1,4 +1,4 @@
-import createModal from '../util/create_modal';
+import createModal from '../util/_create_modal';
 import { removeAllChildNodes } from '../util/dom_nodes_util';
 
 export default class Turn {

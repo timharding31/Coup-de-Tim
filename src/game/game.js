@@ -1,7 +1,7 @@
 import CourtDeck from './court_deck';
 import Treasury from './treasury';
 import Player from './player';
-const moment = require('moment');
+// const moment = require('moment');
 
 
 export default class Game {
@@ -14,6 +14,25 @@ export default class Game {
     this.turnStepOne = this.turnStepOne.bind(this);
     this.turnStepTwo = this.turnStepTwo.bind(this);
     this.turnStepThree = this.turnStepThree.bind(this);
+    this.gameOver = false;
+    this.winner = null;
+    this.started = false;
+    this.awaitGameOver();
+  }
+
+  awaitGameOver() {
+    const gameOverLoop = () => {
+      let checkGameOver = false;
+      if (this.started) checkGameOver = Boolean((this.playerOne.cards.length === 0) || (this.playerTwo.cards.length === 0));
+      if (checkGameOver) {
+        debugger
+        this.gameOver = true;
+        this.winner = [this.playerOne, this.playerTwo].filter(player => player.cards.length > 0)[0];
+      } else {
+        setTimeout(gameOverLoop, 0);
+      }
+    }
+    gameOverLoop();
   }
 
   startGame() {
@@ -22,12 +41,19 @@ export default class Game {
     this.playerTwo = this.players[1];
     this.currentPlayer = this.playerOne;
     this.currentTarget = this.playerTwo;
+    this.started = true;
   }
 
   switchTurns() {
     this.currentPlayer = this.players[(this.players.indexOf(this.currentPlayer) + 1) % 2];
     this.currentTarget = this.players[(this.players.indexOf(this.currentTarget) + 1) % 2];
   }
+
+  // turnStepOne({ action, targetBlocked, targetChallenged }) {
+  //   if (['Income', 'Coup'].includes(action)) return this.turnStepTwo(action);
+  //   if (Boolean(JSON.parse(wasBlocked))) {
+  //   }
+  // }
 
   turnStepOne({ action, wasBlocked, wasChallenged }) {
     if (['Income', 'Coup'].includes(action)) return this.turnStepTwo(action);
@@ -38,8 +64,8 @@ export default class Game {
         let rand = Math.round(Math.random());
         let lostCard = this.currentTarget.cards[rand];
         this.currentTarget.returnInfluence(rand, true);
-        let now = moment().format('h:mm:ss a');
-        this.currentTarget.gameLog.push({ time: now, msg: `You lost your ${lostCard.character} due to an unsuccessful challenge` });
+        // let now = moment().format('h:mm:ss a');
+        // this.currentTarget.gameLog.push({ time: now, msg: `You lost your ${lostCard.character} due to an unsuccessful challenge` });
         return this.turnStepOne({ action, wasBlocked: false, wasChallenged: false });
       } else {
         return this.turnStepTwo('Lost Challenge');
@@ -101,24 +127,24 @@ export default class Game {
         return 'Turn Complete';
       case 'Lost Challenge':
         let lostCard = this.currentPlayer.cards[idx1];
-        let now = moment().format('h:mm:ss a');
-        this.currentPlayer.returnInfluence(Number(idx1), true);
-        this.currentPlayer.gameLog.push({ time: now, msg: `You lost your ${lostCard.character} because your opponent successfully challenged` });
+        // let now = moment().format('h:mm:ss a');
+        // this.currentPlayer.returnInfluence(Number(idx1), true);
+        // this.currentPlayer.gameLog.push({ time: now, msg: `You lost your ${lostCard.character} because your opponent successfully challenged` });
         return 'Turn Complete';
       default:
         return 'Turn Complete';
     }
   }
 
-  gameOver() {
-    return ((this.playerOne.cards.length === 0) || (this.playerTwo.cards.length === 0))
-  }
+  // gameOver() {
+  //   return ((this.playerOne.cards.length === 0) || (this.playerTwo.cards.length === 0))
+  // }
 
-  winner() {
-    if (this.gameOver()) {
-      return [this.playerOne, this.playerTwo].filter(player => player.cards.length > 0)[0];
-    } else {
-      return null;
-    }
-  }
+  // winner() {
+  //   if (this.gameOver()) {
+  //     return [this.playerOne, this.playerTwo].filter(player => player.cards.length > 0)[0];
+  //   } else {
+  //     return null;
+  //   }
+  // }
 }

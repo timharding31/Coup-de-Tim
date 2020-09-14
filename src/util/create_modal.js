@@ -1,147 +1,186 @@
 import createElement from './create_element';
 const regeneratorRuntime = require("regenerator-runtime");
-import Card from '../game/card';
 const intersection = require('../images/intersection_texture.png');
-import { removeAllChildNodes } from './dom_nodes_util';
 
-export default (type, action, currentPlayer, currentTarget) => {
-  let submitButton = createElement('button',
-    {
-      id: 'submit',
-      text: 'Submit',
-      'data-was-blocked': false,
-      'data-was-challenged': false
+export default (type, recipient, action, currentPlayer, currentTarget) => {
+  let currentPlayerStr = currentPlayer.idx === 1 ? 'Player One' : 'Player Two';
+  let currentTargetStr = currentTarget.idx === 1 ? 'Player One' : 'Player Two';
+  let modalId = `modal-${recipient}-${type}`;
+
+
+  const modalOptions = {
+    'modal-target-block-challenge': {
+      messages: [
+        `${currentPlayerStr} has chosen to ${action.toUpperCase()}`,
+        `${currentTargetStr}, would you like to BLOCK or CHALLENGE this ${action.toUpperCase()}?`
+      ],
+      buttonOptions: [
+        { txt: `Block ${action}`, btnId: 'target-block' },
+        { txt: `Challenge ${action}`, btnId: 'target-challenge' },
+        { txt: `Allow ${action}`, btnId: 'allow' }
+      ]
+    },
+    'modal-target-challenge': {
+      messages: [
+        `${currentPlayerStr} has chosen to ${action.toUpperCase()}`,
+        `${currentTargetStr}, would you like to CHALLENGE this ${action.toUpperCase()}?`
+      ],
+      buttonOptions: [
+        { txt: `Challenge ${action}`, btnId: 'target-challenge' },
+        { txt: `Allow ${action}`, btnId: 'allow' }
+      ]
+    },
+    'modal-target-block': {
+      messages: [
+        `${currentPlayerStr} has chosen to ${action.toUpperCase()}`,
+        `${currentTargetStr}, would you like to BLOCK this ${action.toUpperCase()}?`
+      ],
+      buttonOptions: [
+        { txt: `Block ${action}`, btnId: 'target-block' },
+        { txt: `Allow ${action}`, btnId: 'allow' }
+      ]
+    },
+    'modal-player-challenge': {
+      messages: [
+        `${currentTargetStr} has BLOCKED ${currentPlayerStr}'s ${action.toUpperCase()}`,
+        `${currentPlayerStr}, would you like to CHALLENGE this BLOCK?`
+      ],
+      buttonOptions: [
+        { txt: `Challenge Block`, btnId: 'player-challenge' },
+        { txt: `Allow Block`, btnId: 'allow' }
+      ]
+    },
+    'modal-target-forfeit-challenge': {
+      messages: [
+        `${currentPlayerStr}'s CHALLENGE was successful!`,
+        `${currentTargetStr} must choose an influence to forfeit:`
+      ]
+    },
+    'modal-target-forfeit-action': {
+      messages: [
+        `${currentPlayerStr}'s ${action.toUpperCase()} was successful!`,
+        `${currentTargetStr} must choose an influence to forfeit:`
+      ]
+    },
+    'modal-player-forfeit': {
+      messages: [
+        `${currentTargetStr}'s CHALLENGE was successful!`,
+        `${currentPlayerStr} must choose an influence to forfeit:`
+      ]
+    },
+    'modal-player-exchange': {
+      messages: [
+        `${currentPlayerStr}, select two influences to return to the Court Deck`
+      ]
     }
-  );
-  let tint = createElement('div', {
-    class: 'modal-tint',
-  })
-  let submitButtonContainer = createElement('div', { class: 'modal-submit-container' }, submitButton);
-  let modalHeader;
-  let header;
-  let subHeader;
-  let buttonPlaceholder = createElement('div', { style: 'display: none' });
-  let buttons = [buttonPlaceholder];
-  if (type === 'block-challenge') {
-    header = createElement('p', { text: `Player ${currentPlayer.idx} has chosen to <p class="modal-header-action">${action}</p>` });
-    subHeader = createElement('p', { text: `Will Player ${currentTarget.idx} allow them to continue?`});
-    modalHeader = createElement('div', { class: 'modal-header' }, header, subHeader);
-    let blockButton = createElement('button',
-      {
-        class: 'modal-response',
-        id: 'modal-response-block',
-        text: 'Block',
-        onClick: () => {
-          let that = document.getElementById('modal-response-block');
-          that.classList.toggle('selected');
-          submitButton.setAttribute('data-was-blocked', Boolean(!JSON.parse(submitButton.getAttribute('data-was-blocked'))))
-        }
-      }
-    );
-    let challengeButton = createElement('button',
-      {
-        class: 'modal-response',
-        id: 'modal-response-challenge',
-        text: 'Challenge',
-        onClick: () => {
-          let that = document.getElementById('modal-response-challenge');
-          that.classList.toggle('selected');
-          submitButton.setAttribute('data-was-challenged', Boolean(!JSON.parse(submitButton.getAttribute('data-was-challenged'))))
-        }
-      }
-    );
-    buttons = createElement('div', { id: 'modal-buttons', class: 'modal-buttons' }, blockButton, challengeButton);
-  } else if (type === 'player-choice') {
-    let cardButtons = [buttonPlaceholder];
-    if (action === 'Assassinate' || action === 'Coup') {
-      header = createElement('p', { text: `Player ${currentPlayer.idx}'s<p class="modal-header-action">${action}</p> was successful.` });
-      subHeader = createElement('p', { text: `Player ${currentTarget.idx}, choose an influence to lose:` });
-      cardButtons = currentTarget.cards.map((card, idx) => {
-        let cardFaceUp = Object.assign(Object.create(Object.getPrototypeOf(card)), card);
-        cardFaceUp.flipUp();
-        let cardButton = createElement('button',
-          {
-            class: 'card-choice-button',
-            id: `card-choice-${idx}`,
-            onClick: () => {
-              submitButton.setAttribute('data-idx1', idx);
-              let that = document.getElementById(`card-choice-${idx}`);
-              that.classList.toggle('selected');
-            }
-          }, cardFaceUp.render()
-        );
-        return cardButton;
-      });
-    } else if (action === 'Lost Challenge') {
-      header = createElement('p', { text: `Player ${currentPlayer.idx} has lost the challenge. Choose an influence to lose:` });
-      cardButtons = currentPlayer.cards.map((card, idx) => {
-        let cardFaceUp = Object.assign(Object.create(Object.getPrototypeOf(card)), card);
-        cardFaceUp.flipUp();
-        let cardButton = createElement('button',
-          {
-            class: 'card-choice-button',
-            id: `card-choice-${idx}`,
-            onClick: () => {
-              submitButton.setAttribute('data-idx1', idx);
-              let that = document.getElementById(`card-choice-${idx}`);
-              that.classList.toggle('selected');
-            }
-          }, cardFaceUp.render()
-        );
-        return cardButton;
-      });
-    } else if (action === 'Exchange') {
-      header = createElement('p', { text: `Player ${currentPlayer.idx}, you must select two influences to return to the Court Deck` });
-      cardButtons = currentPlayer.cards.map((card, idx) => {
-        let cardFaceUp = Object.assign(Object.create(Object.getPrototypeOf(card)), card);
-        cardFaceUp.flipUp();
-        let cardButton = createElement('button',
-          {
-            class: 'card-choice-button',
-            id: `card-choice-${idx}`,
-            onClick: () => {
-              let submitButtonDataSet = submitButton.dataset;
-              if (submitButtonDataSet['idx1']) {
-                submitButton.setAttribute('data-idx2', idx);
-              } else {
-                submitButton.setAttribute('data-idx1', idx);
-              }
-              let that = document.getElementById(`card-choice-${idx}`);
-              that.classList.toggle('selected');
-            }
-          },
-          cardFaceUp.render()
-        );
-        return cardButton;
-      });
-    } else if (action === 'Steal') {
-      header = createElement('p', { text: `Player ${currentPlayer.idx}'s<p class="modal-header-action">${action}</p> was successful.` });
-      subHeader = createElement('p', { text: `Two of Player ${currentTarget.idx}'s coins have been stolen. Hit submit to continue:` });
-    } else {
-      header = createElement('p', { text: `No further action required. Player ${currentPlayer.idx}, hit submit to continue` });
-    }
-    modalHeader = createElement('div', { class: 'modal-header' }, header);
-    if (subHeader) modalHeader.appendChild(subHeader);
-    buttons = createElement('div', { id: 'modal-buttons', class: 'modal-buttons' }, ...cardButtons);
-  } else if (type === 'game-over') {
-    header = createElement('p', { text: `Player ${currentPlayer.idx} has won the game!`})
-    subHeader = createElement('p', { text: 'Would you like to play again?' });
-    modalHeader = createElement('div', { class: 'modal-header' }, header, subHeader);
-    let exitButton = createElement('button',
-      {
-        class: 'modal-response', text: 'Exit', onClick: action.exitGame,
-      }
-    );
-    let replayButton = createElement('button',
-      {
-        class: 'modal-response',
-        text: 'Play Again',
-        onClick: action.playAgain
-      }
-    );
-    buttons = createElement('div', { id: 'modal-buttons', class: 'modal-buttons' }, replayButton, exitButton);
   }
 
-  let modal = createElement('div', { id: `modal-${type}`, class: `modal-${type}`, style: `background-image: url("${intersection.default}")` }, tint, modalHeader, buttons, submitButtonContainer);
-  return modal;
+  let messages = modalOptions[modalId].messages;
+  let header = messages.map(message => createElement('p', { text: message }));
+
+  let tint = createElement('div', { class: 'modal-tint' });
+  let modal = createElement('div',
+    {
+      id: `modal-${type}`,
+      style: `background-image: url("${intersection.default}")`,
+      'data-submit': false,
+      'data-idx1': '',
+      'data-idx2': '',
+      'data-targetChallenge': false,
+      'data-targetBlock': false,
+      'data-playerChallenge': false,
+      'data-allow': false,
+
+  },
+  tint,
+  ...header);
+
+  let buttons, allButtons, submit;
+
+  if (['block-challenge', 'block', 'challenge'].includes(type)) {
+    let buttonOptions = modalOptions[modalId].buttonOptions;
+    buttons = buttonOptions.map(buttonOption => createElement('button', {
+      class: 'modal-button',
+      id: buttonOption.btnId,
+      text: buttonOption.txt,
+      type: 'submit',
+      onClick: () => {
+        modal.setAttribute(`data-${buttonOption.btnId}`, true);
+        modal.setAttribute('data-submit', true);
+      }
+    }));
+    allButtons = createElement('div', { class: 'modal-buttons' }, ...buttons);
+  } else if (type === 'exchange') {
+    buttons = currentPlayer.cards.map((card, idx) => {
+      let cardFaceUp = Object.assign(Object.create(Object.getPrototypeOf(card)), card);
+      cardFaceUp.flipUp();
+      let cardButton = createElement('button',
+        {
+          class: 'card-choice-button',
+          id: `card-choice-${idx}`,
+          type: 'button',
+          onClick: () => {
+            let modalDataSet = modal.dataset;
+            if (modalDataSet['idx1']) {
+              modal.setAttribute('data-idx2', idx);
+            } else {
+              modal.setAttribute('data-idx1', idx);
+            }
+            let that = document.getElementById(`card-choice-${idx}`);
+            that.classList.toggle('selected');
+          }
+        },
+        cardFaceUp.render()
+      );
+      return cardButton;
+    });
+    let submitBtn = createElement('button',
+      {
+        id: 'submit',
+        text: 'Submit',
+        type: 'submit',
+        onClick: () => modal.setAttribute('data-submit', true)
+      });
+    submit = createElement('div', { class: 'submit-button-container' }, submitBtn);
+    allButtons = createElement('div', { id: 'modal-buttons', class: 'modal-buttons' }, ...buttons);
+  } else {
+    let cardholder;
+    if (recipient === 'target') {
+      cardholder = currentTarget;
+    } else if (recipient === 'player') {
+      cardholder = currentPlayer;
+    }
+    buttons = cardholder.cards.map((card, idx) => {
+      let cardFaceUp = Object.assign(Object.create(Object.getPrototypeOf(card)), card);
+      cardFaceUp.flipUp();
+      let cardButton = createElement('button',
+        {
+          class: 'card-choice-button',
+          type: 'button',
+          id: `card-choice-${idx}`,
+          onClick: () => {
+            modal.setAttribute('data-idx1', idx);
+            let that = document.getElementById(`card-choice-${idx}`);
+            that.classList.toggle('selected');
+          }
+        },
+        cardFaceUp.render()
+      );
+      return cardButton;
+    });
+    let submitBtn = createElement('button',
+      {
+        id: 'submit',
+        text: 'Submit',
+        type: 'submit',
+        onClick: () => modal.setAttribute('data-submit', true)
+      });
+    submit = createElement('div', { class: 'submit-button-container' }, submitBtn);
+    allButtons = createElement('div', { id: 'modal-buttons', class: 'modal-buttons' }, ...buttons);
+  }
+
+
+  modal.appendChild(allButtons);
+  if (submit) modal.appendChild(submit);
+  return modal
 }

@@ -42,11 +42,12 @@ export default class CourtDeck {
   }
 
   render() {
-    let renderedUpCards;
-    if (this.faceUpCards.length) {
-      this.faceUpCards.forEach(card => card.flipUp());
-      renderedUpCards = createElement('div', { class: 'discard-pile' }, ...this.faceUpCards.map(card => card.render()));
-    }
+    // let renderedUpCards;
+    // if (this.faceUpCards.length) {
+    //   this.faceUpCards.forEach(card => card.flipUp());
+    //   renderedUpCards = createElement('div', { class: 'discard-pile' }, ...this.faceUpCards.map(card => card.render()));
+    // }
+    this.deck.forEach(card => card.flipDown());
     let deckCount = this.deck.length;
     let renderedCourtDeck = createElement('div',
       {
@@ -60,6 +61,23 @@ export default class CourtDeck {
       }
       , ...this.deck.map((card, idx) => card.render(deckCount, idx))
     );
+    let renderedUpCards;
+    let faceUpCount = this.faceUpCards.length;
+    if (faceUpCount) {
+      this.faceUpCards.forEach(card => card.flipUp());
+      renderedUpCards = createElement('div',
+        {
+          class: 'discard-pile',
+          style: `
+          display: grid;
+          grid-template-columns: repeat(${(faceUpCount + 1) * 3}, 80px);
+          grid-template-rows: 168px;
+          max-width: ${((deckCount + 1) * 3)}px;
+        `
+        }
+        , ...this.faceUpCards.map((card, idx) => card.render(faceUpCount, idx))
+      );
+    }
     let renderedAllCards = createElement('div', { class: 'all-cards' }, renderedCourtDeck);
     if (renderedUpCards) renderedAllCards.appendChild(renderedUpCards);
     return renderedAllCards;

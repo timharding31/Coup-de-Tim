@@ -1,12 +1,13 @@
 import createElement from '../util/create_element';
-import createModal from '../util/create_modal';
+import createModal from '../util/_create_modal';
 import turnControl from '../util/turn_control';
 import dukeOptions from '../characters/duke';
 import assassinOptions from '../characters/assassin';
 import ambassadorOptions from '../characters/ambassador';
 import captainOptions from '../characters/captain';
 import contessaOptions from '../characters/contessa';
-import Turn from './turn';
+import Turn from './_turn';
+import turnSwitch from './turn_switch';
 
 const incomeSymbol = require('../images/symbols/income.png');
 const foreignAidSymbol = require('../images/symbols/foreign_aid.png');
@@ -38,7 +39,7 @@ export default (rootEl, currentPlayer, game, turnEndCallback) => {
     return createElement('li',
       {
         class: 'turn-control-list-item',
-        onClick: () => (new Turn(rootEl, game, option.action, turnEndCallback)),
+        onClick: () => turnSwitch(rootEl, game, option.action, turnEndCallback),
         style: `background-color: ${((idx < 2) || (idx === 2 && currentPlayer.coins >= 7) || (idx > 2 && playerActions.includes(option.action))) ? option.backgroundColor : 'transparent'}`,
       },
       ...turnControl(option.symbol, option.action, option.effect));

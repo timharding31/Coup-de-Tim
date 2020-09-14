@@ -24,7 +24,8 @@ module.exports = {
         test: /\.(png|jpe?g|gif)$/i,
         loader: 'file-loader',
         options: {
-          outputPath: 'assets'
+          outputPath: 'assets',
+          publicPath: 'public/assets'
         }
       }
     ]

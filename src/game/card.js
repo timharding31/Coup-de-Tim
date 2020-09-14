@@ -38,7 +38,11 @@ export default class Card {
 
   render(deckCount, idx) {
     if (deckCount) {
-      return createFaceDownCard(deckCount, idx);
+      if (this.faceUp) {
+        return createCard(this.options, deckCount, idx);
+      } else {
+        return createFaceDownCard(deckCount, idx);
+      }
     } else {
       if (this.faceUp) {
         return createCard(this.options);
