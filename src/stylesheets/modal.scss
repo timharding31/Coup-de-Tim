@@ -12,8 +12,8 @@
   z-index: 10;
 }
 
-#game-over > div,
-#modal.present > div {
+#game-over > form,
+#modal.present > form {
   width: 60%;
   height: 70%;
   margin-top: 3%;
@@ -63,7 +63,7 @@
   text-shadow: 0.25px 0.25px $cdt-white;
 }
 
-#modal.present > div > p {
+#modal.present > form > p {
   display: flex;
   flex-direction: row;
   width: 100%;
@@ -75,17 +75,17 @@
   margin-bottom: 5%;
 }
 
-#modal.present > div > p:first-of-type {
+#modal.present > form > p:first-of-type {
   width: 100%;
   line-height: 30px;
   margin-top: 5%;
 }
 
-#modal.present > div > *:not(:first-child) {
+#modal.present > form > *:not(:first-child) {
   z-index: 3;
 }
 
-#modal.present > div > p:not(:first-of-type) {
+#modal.present > form > p:not(:first-of-type) {
   font-style: italic;
   color: $cdt-red;
 }

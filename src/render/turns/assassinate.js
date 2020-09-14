@@ -6,9 +6,11 @@ export default class Assassinate extends Turn {
   constructor(rootEl, game, turnCallBack, action, challengeable, blockable) {
     super(rootEl, game, turnCallBack, action, challengeable, blockable);
     this.readyForStepTwo, this.readyForStepThree, this.readyForStepFour = false, false, false;
-    this.modalEventListener(this.readyForStepTwo, this.firstModal, () => {
+    this.firstModal.addEventListener('submit', (e) => {
+      e.preventDefault();
       this.stepTwoOptions = Object.assign({}, this.firstModal.dataset);
       this.readyForStepTwo = true;
+      this.firstModal.remove();
     })
     this.awaitStepTwo();
     this.awaitStepThree();
@@ -49,13 +51,11 @@ export default class Assassinate extends Turn {
   }
 
   stepTwo() {
-    this.readyForStepThree = false;
-    removeAllChildNodes(this.rootEl);
-    if (Boolean(this.stepTwoOptions.targetBlock)) {
+    if (this.stepTwoOptions.targetblock == 'true') {
       this.allowed = false;
       this.secondModal = createModalNew('challenge', 'player', this.action, this.currentPlayer, this.currentTarget);
       this.rootEl.appendChild(this.secondModal);
-    } else if (Boolean(this.stepTwoOptions.targetChallenge)) {
+    } else if (this.stepTwoOptions.targetchallenge == 'true') {
       let assassinIdx = this.currentPlayer.cards.map(card => card.character).indexOf('Assassin');
       if (assassinIdx > -1) {
         this.currentPlayer.returnInfluence.apply(this.currentPlayer, [assassinIdx, false]);
@@ -75,24 +75,35 @@ export default class Assassinate extends Turn {
       this.secondModal = createModalNew('forfeit-action', 'target', this.action, this.currentPlayer, this.currentTarget);
       this.rootEl.appendChild(this.secondModal);
     }
-    this.modalEventListener(this.readyForStepThree, this.secondModal, () => {
+    // this.modalEventListener(this.readyForStepThree, this.secondModal, () => {
+    //   this.stepThreeOptions = Object.assign({}, this.secondModal.dataset);
+    //   this.readyForStepThree = true;
+    // });
+    this.secondModal.addEventListener('submit', (e) => {
+      e.preventDefault();
       this.stepThreeOptions = Object.assign({}, this.secondModal.dataset);
       this.readyForStepThree = true;
-    });
+      this.secondModal.remove();
+    })
   }
 
   stepThree() {
-    removeAllChildNodes(this.rootEl);
-    if (Boolean(this.stepThreeOptions.playerChallenge)) {
+    if (this.stepThreeOptions.playerchallenge == 'true') {
       let contessaIdx = this.currentTarget.cards.map(card => card.character).indexOf('Contessa');
       if (contessaIdx > -1) {
         this.currentTarget.returnInfluence(contessaIdx, false);
         this.allowed = false;
         this.thirdModal = createModalNew('forfeit', 'player', this.action, this.currentPlayer, this.currentTarget);
         this.rootEl.appendChild(this.thirdModal);
-        this.modalEventListener(this.readyForStepFour, this.thirdModal, () => {
+        // this.modalEventListener(this.readyForStepFour, this.thirdModal, () => {
+        //   this.stepFourOptions = Object.assign({}, this.thirdModal.dataset);
+        //   this.readyForStepFour = true;
+        // });
+        this.thirdModal.addEventListener('submit', (e) => {
+          e.preventDefault();
           this.stepFourOptions = Object.assign({}, this.thirdModal.dataset);
           this.readyForStepFour = true;
+          this.thirdModal.remove();
         });
       } else {
         this.effect = () => {
@@ -102,7 +113,7 @@ export default class Assassinate extends Turn {
         this.allowed = true;
         this.complete = true;
       }
-    } else if (Boolean(this.stepThreeOptions.allow)) {
+    } else if (this.stepThreeOptions.allow == 'true') {
       this.effect = () => null;
       this.complete = true;
     } else if (this.allowed) {
@@ -122,7 +133,6 @@ export default class Assassinate extends Turn {
   }
 
   stepFour() {
-    removeAllChildNodes(this.rootEl);
     this.effect = () => {
       let idx1 = Number(this.stepFourOptions.idx1);
       this.currentTarget.receiveAssassinate.apply(this.currentTarget, [idx1]);

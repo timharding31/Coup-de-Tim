@@ -6,9 +6,11 @@ export default class Assassinate extends Turn {
   constructor(rootEl, game, turnCallBack, action, challengeable, blockable) {
     super(rootEl, game, turnCallBack, action, challengeable, blockable);
     this.readyForStepTwo, this.readyForStepThree, this.readyForStepFour = false, false, false;
-    this.modalEventListener(this.readyForStepTwo, this.firstModal, () => {
+    this.firstModal.addEventListener('submit', (e) => {
+      e.preventDefault();
       this.stepTwoOptions = Object.assign({}, this.firstModal.dataset);
       this.readyForStepTwo = true;
+      this.firstModal.remove();
     })
     this.awaitStepTwo();
     this.awaitStepThree();
@@ -49,9 +51,7 @@ export default class Assassinate extends Turn {
   }
 
   stepTwo() {
-    this.readyForStepThree = false;
-    removeAllChildNodes(this.rootEl);
-    if (Boolean(this.stepTwoOptions.targetChallenge)) {
+    if (this.stepTwoOptions.targetchallenge == 'true') {
       let ambassadorIdx = this.currentPlayer.cards.map(card => card.character).indexOf('Ambassador');
       if (ambassadorIdx > -1) {
         this.allowed = true;
@@ -63,26 +63,29 @@ export default class Assassinate extends Turn {
         this.secondModal = createModalNew('forfeit', 'player', this.action, this.currentPlayer, this.currentTarget);
         this.rootEl.appendChild(this.secondModal);
       }
-      this.modalEventListener(this.readyForStepThree, this.secondModal, () => {
+      this.secondModal.addEventListener('submit', (e) => {
+        e.preventDefault();
         this.stepThreeOptions = Object.assign({}, this.secondModal.dataset);
         this.readyForStepThree = true;
-      });
+        this.secondModal.remove();
+      })
       return
     } else {
       this.allowed = true;
       this.currentPlayer.exchangePartOne.apply(this.currentPlayer);
       this.secondModal = createModalNew('exchange', 'player', this.action, this.currentPlayer, this.currentTarget);
       this.rootEl.appendChild(this.secondModal);
-      this.modalEventListener(this.readyForStepFour, this.secondModal, () => {
+      this.secondModal.addEventListener('submit', (e) => {
+        e.preventDefault();
         this.stepFourOptions = Object.assign({}, this.secondModal.dataset);
         this.readyForStepFour = true;
-      });
+        this.secondModal.remove();
+      })
       return
     }
   }
 
   stepThree() {
-    removeAllChildNodes(this.rootEl);
     let idx1 = Number(this.stepThreeOptions.idx1);
     if (this.allowed) {
       this.currentTarget.receiveAssassinate.apply(this.currentTarget, [idx1]);
@@ -90,10 +93,12 @@ export default class Assassinate extends Turn {
       this.currentPlayer.exchangePartOne.apply(this.currentPlayer);
       this.thirdModal = createModalNew('exchange', 'player', this.action, this.currentPlayer, this.currentTarget);
       this.rootEl.appendChild(this.thirdModal);
-      this.modalEventListener(this.readyForStepFour, this.thirdModal, () => {
+      this.thirdModal.addEventListener('submit', (e) => {
+        e.preventDefault();
         this.stepFourOptions = Object.assign({}, this.thirdModal.dataset);
         this.readyForStepFour = true;
-      });
+        this.thirdModal.remove();
+      })
     } else {
       this.effect = () => {
         this.currentPlayer.receiveAssassinate.apply(this.currentPlayer, [idx1]);
@@ -103,7 +108,6 @@ export default class Assassinate extends Turn {
   }
 
   stepFour() {
-    removeAllChildNodes(this.rootEl);
     this.effect = () => {
       let idx1 = Number(this.stepFourOptions.idx1);
       let idx2 = Number(this.stepFourOptions.idx2);

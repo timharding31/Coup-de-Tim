@@ -46,25 +46,5 @@ export default class Turn {
     turnEndLoop();
   }
 
-  modalEventListener(shouldNotRun, modal, callback) {
-    if (shouldNotRun) return;
-    let shouldRun = true;
-    const modalEventLoop = () => {
-      let modalDataSet = Object.assign({}, modal.dataset);
-      if (JSON.parse(modalDataSet.submit)) {
-        callback();
-        shouldRun = false;
-      } else if (!shouldRun) {
-        return;
-      } else {
-        setInterval(modalEventLoop, 0);
-      }
-    }
-    if (modal) {
-      if (document.getElementById(modal.getAttribute('id'))) {
-        modalEventLoop();
-      }
-    }
-  }
   
 }

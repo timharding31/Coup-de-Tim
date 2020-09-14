@@ -6,9 +6,11 @@ export default class Coup extends Turn {
   constructor(rootEl, game, turnCallBack, action, challengeable, blockable) {
     super(rootEl, game, turnCallBack, action, challengeable, blockable);
     this.readyForStepTwo = false;
-    this.modalEventListener(this.readyForStepTwo, this.firstModal, () => {
+    this.firstModal.addEventListener('submit', (e) => {
+      e.preventDefault();
       this.stepTwoOptions = Object.assign({}, this.firstModal.dataset);
       this.readyForStepTwo = true;
+      this.firstModal.remove();
     })
     this.awaitStepTwo();
   }
@@ -25,7 +27,6 @@ export default class Coup extends Turn {
   }
 
   stepTwo() {
-    removeAllChildNodes(this.rootEl);
     this.effect = () => {
       this.currentPlayer.coup.apply(this.currentPlayer);
       let idx1 = Number(this.stepTwoOptions.idx1);

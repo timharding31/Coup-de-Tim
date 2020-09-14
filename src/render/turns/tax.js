@@ -6,9 +6,11 @@ export default class Tax extends Turn {
   constructor(rootEl, game, turnCallBack, action, challengeable, blockable) {
     super(rootEl, game, turnCallBack, action, challengeable, blockable);
     this.readyForStepTwo, this.readyForStepThree = false, false;
-    this.modalEventListener(this.readyForStepTwo, this.firstModal, () => {
+    this.firstModal.addEventListener('submit', (e) => {
+      e.preventDefault();
       this.stepTwoOptions = Object.assign({}, this.firstModal.dataset);
       this.readyForStepTwo = true;
+      this.firstModal.remove();
     })
     this.awaitStepTwo();
     this.awaitStepThree();
@@ -37,9 +39,7 @@ export default class Tax extends Turn {
   }
 
   stepTwo() {
-    this.readyForStepThree = false;
-    removeAllChildNodes(this.rootEl);
-    if (Boolean(this.stepTwoOptions.targetChallenge)) {
+    if (this.stepTwoOptions.targetchallenge == 'true') {
       let dukeIdx = this.currentPlayer.cards.map(card => card.character).indexOf('Duke');
       if (dukeIdx > -1) {
         this.allowed = true;
@@ -59,14 +59,15 @@ export default class Tax extends Turn {
       this.complete = true;
       return;
     }
-    this.modalEventListener(this.readyForStepThree, this.secondModal, () => {
+    this.secondModal.addEventListener('submit', (e) => {
+      e.preventDefault();
       this.stepThreeOptions = Object.assign({}, this.secondModal.dataset);
       this.readyForStepThree = true;
-    });
+      this.secondModal.remove();
+    })
   }
 
   stepThree() {
-    removeAllChildNodes(this.rootEl);
     let idx1 = Number(this.stepThreeOptions.idx1);
     if (this.allowed) {
       this.effect = () => {

@@ -79,7 +79,7 @@ export default (type, recipient, action, currentPlayer, currentTarget) => {
   let header = messages.map(message => createElement('p', { text: message }));
 
   let tint = createElement('div', { class: 'modal-tint' });
-  let modal = createElement('div',
+  let modal = createElement('form',
     {
       id: `modal-${type}`,
       style: `background-image: url("${intersection.default}")`,
