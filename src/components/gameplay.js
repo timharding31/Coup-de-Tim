@@ -33,7 +33,6 @@ export default class Gameplay {
     this.turnStartControls();
 
     this.turnSwitchCallback = this.turnSwitchCallback.bind(this);
-    // this.clearGameRootDataset = this.clearGameRootDataset.bind(this);
     this.turnStartControls = this.turnStartControls.bind(this);
   }
 
@@ -54,39 +53,4 @@ export default class Gameplay {
     }
     this.turnStartControls();
   }
-
-  renderControls() {
-    let controlsRendered = gameControls(this.elements['modal'], this.game.currentPlayer, this.game, this.turnCallback.bind(this));
-    // this.elements['player-one'].replaceChild(controlsRendered, this.elements['player-one'].childNodes[0]);
-    // if (!currentPlayerControls) return;
-    removeAllChildNodes(this.elements['game-controls']);
-    this.elements['game-controls'].appendChild(controlsRendered);
-  }
-
-
-  renderAll() {
-    if (this.gameOver) {
-      this.elements['game-over'].classList.toggle('present');
-      let exitGame = () => removeAllChildNodes(this.rootEl);
-      let playAgain = () => new Gameplay(this.rootEl);
-      let gameOverModal = createModal('game-over', { exitGame: exitGame.bind(this), playAgain: playAgain.bind(this) }, this.winner, null);
-      removeAllChildNodes(this.elements['modal']);
-      this.elements['game-over'].appendChild(gameOverModal);
-    } else {
-      this.game.currentPlayer.flipAllCardsUp();
-      this.game.currentTarget.flipAllCardsDown();
-      this.renderCourt();
-      this.renderPlayerOne();
-      this.renderPlayerTwo();
-      this.renderControls();
-      // this.elements['game-controls'].appendChild(createElement('buttton', { id: 'start-game', text: 'Start Game', onClick: () => this.runGame() }));
-    }
-    // this.rootEl.innerHTML = '';
-    // this.rootEl.appendChild(createElement('div',
-    //   { id: 'game' },
-    //   this.renderCurrentTarget(), this.renderCourt(), this.renderCurrentPlayer()
-    // ));
-  }
-
-
 }

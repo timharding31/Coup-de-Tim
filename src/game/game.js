@@ -1,10 +1,13 @@
 import CourtDeck from './court_deck';
 import Treasury from './treasury';
 import Player from './player';
+import createElement from '../util/create_element';
+import { removeAllChildNodes } from '../util/dom_nodes_util';
 
 
 export default class Game {
   constructor({ gameRoot, playerRoots, courtDeckRoot, treasuryRoot }) {
+    this.rootsObject = { gameRoot, playerRoots, courtDeckRoot, treasuryRoot };
     this.rootEl = gameRoot;
     this.courtDeck = new CourtDeck(courtDeckRoot);
     this.treasury = new Treasury(treasuryRoot);
@@ -23,6 +26,8 @@ export default class Game {
     this.startGame = this.startGame.bind(this);
     this.checkWinner = this.checkWinner.bind(this);
     this.render = this.render.bind(this);
+    this.restartGame = this.restartGame.bind(this);
+    this.exitGame = this.exitGame.bind(this);
   }
 
   startGame() {
@@ -47,9 +52,28 @@ export default class Game {
   checkWinner() {
     this.gameOver = Boolean((this.playerOne.cards.length === 0) || (this.playerTwo.cards.length === 0));
     this.winner = [this.playerOne, this.playerTwo].filter(player => player.cards.length > 0)[0];
+    if (this.gameOver) {
+      let header = createElement('div', { class: 'game-over-header' },
+        ...[`Player ${this.winner.idx === 1 ? 'One' : 'Two'} is the winner!`, 'Would you like to play again?']
+          .map(msg => createElement('p', { text: msg }))
+      );
+      let gameOverMessage = createElement('div', { id: 'game-over' }, header);
+      this.rootEl.appendChild(gameOverMessage);
+    }
+  }
+
+  restartGame() {
+    console.log(here);
+    removeAllChildNodes(this.rootEl);
+    new Game(this.rootsObject);
+  }
+
+  exitGame() {
+    location.reload();
   }
 
   render() {
+    this.checkWinner();
     this.currentPlayer.flipAllCardsUp();
     this.currentTarget.flipAllCardsDown();
     this.courtDeck.render();

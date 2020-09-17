@@ -26,7 +26,6 @@ export default (player) => {
       card.classList.toggle('selected');
       let array = (gameRoot.dataset.exchangeIndices) ? JSON.parse(gameRoot.dataset.exchangeIndices) : [];
       array.push(idx);
-      debugger
       gameRoot.dataset.exchangeIndices = JSON.stringify(array);
     })
   });

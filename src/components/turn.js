@@ -63,8 +63,9 @@ export default class Turn {
       let targetHoldIdxCandidate = game.currentTarget.cards.map(card => card.character).indexOf(blockableBy[0]);
       if (targetHoldIdxCandidate < 0 && blockableBy[1]) {
         this.targetWonChallengeIdx = game.currentTarget.cards.map(card => card.character).indexOf(blockableBy[1]);
+      } else {
+        this.targetWonChallengeIdx = targetHoldIdxCandidate;
       }
-      this.targetWonChallengeIdx = targetHoldIdxCandidate;
     }
 
 
@@ -184,11 +185,13 @@ export default class Turn {
 
   // ask target to choose card after lost challenge
   promptTargetForLostChallengeChoice() {
+    this.currentTarget.flipAllCardsUp();
     this.targetLostChallenge = true;
     let lostChallengeForm = loseCardSelector('challenge', this.currentTarget);
     this.currentTarget.renderControls(lostChallengeForm);
     lostChallengeForm.addEventListener('submit', (e) => {
       e.preventDefault();
+      this.currentTarget.flipAllCardsDown();
       lostChallengeForm.remove();
       this.domState = this.domState.refresh();
       this.targetLostChallengeIdx = this.domState.targetLostChallengeIdx;
@@ -199,11 +202,12 @@ export default class Turn {
 
   // ask target to choose card after Assassination or Coup
   promptTargetForKillChoice() {
-    debugger
+    this.currentTarget.flipAllCardsUp();
     let killForm = loseCardSelector('action', this.currentTarget);
     this.currentTarget.renderControls(killForm);
     killForm.addEventListener('submit', (e) => {
       e.preventDefault();
+      this.currentTarget.flipAllCardsDown();
       killForm.remove();
       this.domState = this.domState.refresh();
       this.killIdx = this.domState.killIdx;
