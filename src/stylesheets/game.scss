@@ -1,136 +1,99 @@
 
 
 #game {
-  padding-top: 3%;
-  width: 100%;
-  height: 100%;
-  min-height: 775px;
-  max-height: 1000px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
   position: relative;
+  width: 100%;
+  height: 800px;
+  margin-top: -30px;
+  padding: 0 5%;
 }
 
-#player-one > .player-name {
+#game > #player-one {
   position: absolute;
-  top: -10%;
-  left: 0;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  right: auto;
-  bottom: auto;
-  width: 90%;
-  height: 10%;
-}
-#player-two > .player-name {
-  position: absolute;
-  top: auto;
-  left: 0;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  right: auto;
-  bottom: -7%;
-  width: 90%;
-  height: 10%;
-}
-
-.player-name > h1 {
-  font-size: 225%;
-  font-weight: 700;
-  transform: rotate(-2deg);
-  text-shadow: 1px 1px $cdt-black;
-}
-
-#player-two > .player-name > h1 { color: $cdt-blue }
-#player-one > .player-name > h1 { color: $cdt-red }
-
-#player-one {
-  position: absolute;
-  top: 5%;
-  bottom: auto;
-  left: 25%;
-  right: auto;
-  display: flex;
-  width: 45%;
-  flex-direction: row;
-  justify-content: center;
-  margin-left: -10%;
-  margin-bottom: -13%;
-  padding-bottom: 1.25%;
-  border-bottom: 2px solid $cdt-black-shadow;
-}
-
-#player-two {
-  position: absolute;
-  top: auto;
-  bottom: 5%;
-  left: 25%;
-  right: auto;
-  display: flex;
-  width: 45%;
-  flex-direction: row;
-  justify-content: center;
-  margin-left: -10%;
-  margin-top: -13%;
-  padding-top: 1.25%;
-}
-
-#court {
-  position: absolute;
-  right: -20%;
-  top: 50%;
+  top: 2%;
   bottom: 50%;
-  left: auto;
-  display: flex;
-  width: 100%;
-  flex-direction: row-reverse;
-  justify-content: center;
-  align-items: center;
-  margin-left: 70%;
-}
-
-.all-cards {
-  position: relative;
-}
-
-.discard-pile {
-  position: absolute;
-  transform: scale(0.4);
-  bottom: 120%;
-  left: -400%;
-}
-
-.player-cards {
+  left: 5%;
+  right: auto;
+  width: 70%;
+  height: 48%;
   display: flex;
   flex-direction: row;
-  justify-content: space-evenly;
-  width: 100%;
-  height: 350px;
 }
 
-#player-one .player-cards { align-items: flex-end; }
-#player-two .player-cards { align-items: flex-start; }
+#game > #player-two {
+  position: absolute;
+  top: 50%;
+  bottom: 2%;
+  left: 5%;
+  right: auto;
+  width: 70%;
+  height: 48%;
+  display: flex;
+  flex-direction: row;
+}
 
-.player-coins {
+#game > #court-deck {
+  position: absolute;
+  right: 5%;
+  left: auto;
+  width: 20%;
+  height: 70%;
+  bottom: 5%;
+  top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+#game > #treasury {
+  position: absolute;
+  right: 5%;
+  left: auto;
+  width: 20%;
+  height: 20%;
+  top: 10%;
+  bottom: auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+#player-controls {
+  flex-grow: 2;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  min-width: 86px;
-  max-height: 336px;
-  flex-wrap: wrap;
+  height: 100%;
+  min-width: 15%;
+  max-width: 15%;
+  align-items: center;
+}
+#player-cards {
+  flex-grow: 4;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
 }
 
-#player-two .player-coins {
-  justify-content: flex-end;
+#player-cards > #card {
+  margin-right: 4%;
+}
+#player-coins {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  padding-top: 5%;
+  padding-bottom: 5%;
+  align-items: center;
+  flex-wrap: wrap-reverse;
 }
 
-.treasury {
-  position: relative;
-  margin-right: 1%;
+#discard-pile {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
 }
 
 .coin {
@@ -144,46 +107,8 @@
   transform: scale(1.05);
 }
 
-.player-coins .coin {
-  width: 80px;
-  height: 86px;
+#player-coins .coin {
+  width: 60px;
+  height: 64px;
   background-size: 100% 100%;
-}
-
-#game-controls {
-  position: absolute;
-  left: 7%;
-  top: 25%;
-  bottom: 25%;
-  height: 50%;
-  right: auto;
-}
-
-#game-controls > ul {
-  display: flex;
-  flex-direction: column;
-}
-
-.modal-block-challenge {
-  position: absolute;
-  width: 100%;
-  left: 0;
-  right: 0;
-  top: 0;
-}
-
-.game-log-hover-trigger {
-  width: 50px;
-  height: 50px;
-  background-color: gray;
-}
-
-.game-log-hover-trigger > .game-log {
-  visibility: hidden;
-  position: absolute;
-  list-style: none;
-}
-
-.game-log-hover-trigger:hover > .game-log {
-  visibility: visible;
 }

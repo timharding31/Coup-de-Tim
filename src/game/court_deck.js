@@ -1,12 +1,18 @@
 import Card from './card';
 import createElement from '../util/create_element';
-import createCard from '../util/create_card';
+import { removeAllChildNodes } from '../util/dom_nodes_util';
 
 export default class CourtDeck {
-  constructor() {
+  constructor(rootEl) {
+    this.rootEl = rootEl;
     this.deck = this.buildDeck();
     this.shuffle();
     this.faceUpCards = [];
+
+    this.shuffle = this.shuffle.bind(this);
+    this.deal = this.deal.bind(this);
+    this.returnCard = this.returnCard.bind(this);
+    this.render = this.render.bind(this);
   }
 
   buildDeck()  {
@@ -27,6 +33,7 @@ export default class CourtDeck {
       this.deck[i] = this.deck[j];
       this.deck[j] = temp;
     }
+    this.render();
   }
 
   deal(num) {
@@ -42,11 +49,7 @@ export default class CourtDeck {
   }
 
   render() {
-    // let renderedUpCards;
-    // if (this.faceUpCards.length) {
-    //   this.faceUpCards.forEach(card => card.flipUp());
-    //   renderedUpCards = createElement('div', { class: 'discard-pile' }, ...this.faceUpCards.map(card => card.render()));
-    // }
+    removeAllChildNodes(this.rootEl);
     this.deck.forEach(card => card.flipDown());
     let deckCount = this.deck.length;
     let renderedCourtDeck = createElement('div',
@@ -61,25 +64,6 @@ export default class CourtDeck {
       }
       , ...this.deck.map((card, idx) => card.render(deckCount, idx))
     );
-    let renderedUpCards;
-    let faceUpCount = this.faceUpCards.length;
-    if (faceUpCount) {
-      this.faceUpCards.forEach(card => card.flipUp());
-      renderedUpCards = createElement('div',
-        {
-          class: 'discard-pile',
-          style: `
-          display: grid;
-          grid-template-columns: repeat(${(faceUpCount + 1) * 3}, 80px);
-          grid-template-rows: 168px;
-          max-width: ${((deckCount + 1) * 3)}px;
-        `
-        }
-        , ...this.faceUpCards.map((card, idx) => card.render(faceUpCount, idx))
-      );
-    }
-    let renderedAllCards = createElement('div', { class: 'all-cards' }, renderedCourtDeck);
-    if (renderedUpCards) renderedAllCards.appendChild(renderedUpCards);
-    return renderedAllCards;
+    this.rootEl.appendChild(renderedCourtDeck);
   }
 }

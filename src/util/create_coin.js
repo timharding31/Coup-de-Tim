@@ -1,5 +1,5 @@
 import createElement from './create_element';
-const coinImg = require('../images/coin.png');
+const coinImg = require('../assets/images/coin.png');
 
 export default (boxSize) => {
   let coin;

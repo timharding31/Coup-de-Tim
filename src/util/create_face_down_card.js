@@ -1,6 +1,6 @@
 import createElement from './create_element';
-const cardBack = require('../images//brush-stroke/card_back.png');
-const intersection = require('../images/intersection_texture.png');
+const cardBack = require('../assets/images//brush-stroke/card_back.png');
+const intersection = require('../assets/images/intersection_texture.png');
 
 export default (deckCount, idx) => {
   const img = createElement('div', { class: 'card-back', style: `background-image: url("${cardBack.default}");` });

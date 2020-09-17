@@ -1,16 +1,31 @@
 import createCoin from '../util/create_coin';
 import createElement from '../util/create_element';
-// const moment = require('moment');
+import { removeAllChildNodes } from '../util/dom_nodes_util';
 
 export default class Player {
-  constructor(idx, game) {
+  constructor(rootEl, idx, game) {
+    this.rootEl = rootEl;
     this.idx = idx;
     this.game = game;
     this.opponent = null;
     this.cards = game.courtDeck.deal(2);
     this.coins = game.treasury.dispense(2);
-    // let now = moment().format('h:mm:ss a');
-    // this.gameLog = [{ time: now, msg: 'Welcome to Coup de Tim! Come back here later to view a helpful game log' }];
+    this.upCards = [];
+
+    this.setOpponent = this.setOpponent.bind(this);
+    this.flipAllCardsUp = this.flipAllCardsUp.bind(this);
+    this.flipAllCardsDown = this.flipAllCardsDown.bind(this);
+    this.payCoins = this.payCoins.bind(this);
+    this.receiveCoins = this.receiveCoins.bind(this);
+    this.stealCoins = this.stealCoins.bind(this);
+    this.loseCoins = this.loseCoins.bind(this);
+    this.loseCard = this.loseCard.bind(this);
+    this.reshuffleCard = this.reshuffleCard.bind(this);
+    this.exchangePartOne = this.exchangePartOne.bind(this);
+    this.exchangePartTwo = this.exchangePartTwo.bind(this);
+    this.prove = this.prove.bind(this);
+    this.renderControls = this.renderControls.bind(this);
+    this.render = this.render.bind(this);
   }
 
   setOpponent() {
@@ -25,125 +40,85 @@ export default class Player {
     this.cards.forEach(card => card.flipDown());
   }
 
-  returnInfluence(idx, dead = true) {
-    let lostCard = this.cards[idx];
-    this.cards = [...this.cards.slice(0, idx), ...this.cards.slice(idx + 1)];
-    if (dead) {
-      this.game.courtDeck.faceUpCards.push(lostCard);
-    } else {
-      this.game.courtDeck.returnCard(lostCard);
-    }
-  }
-
-  pay(num) {
+  payCoins(num) {
     this.coins -= this.game.treasury.collect(num);
+    this.render();
   }
 
-  block() {
-    return true;
+  receiveCoins(num) {
+    this.coins += this.game.treasury.dispense(num);
+    this.render();
   }
 
-  challenge() {
-    return true;
+  stealCoins(num) {
+    this.coins += Math.min(num, this.opponent.coins);
+    this.render();
   }
 
-  loseChallenge(idx) {
-    this.returnInfluence(idx, true);
+  loseCoins(num) {
+    this.coins -= Math.min(num, this.coins);
+    this.render();
   }
 
-  prove(action) {
-    let proven;
-    const handIndex = this.cards.map(card => card.action).indexOf(action);
-    if (handIndex > -1) {
-      proven = true;
-      let returnedCard = this.cards[handIndex];
-      this.cards = [...this.cards, ...this.game.courtDeck.deal(1)];
-      this.returnInfluence(handIndex, false);
-      // let now = moment().format('h:mm:ss a');
-      // this.gameLog.push({ time: now, msg: `You received a new card after your opponent challenged your ${returnedCard.character}` });
-    } else {
-      proven = false;
-    }
-    return proven;
+  loseCard(idx) {
+    let lostCard = this.cards[idx];
+    this.cards = this.cards.filter((_, i) => (i != idx));
+    lostCard.flipUp();
+    this.upCards.push(lostCard);
+    this.render();
   }
 
-  income() {
-    this.coins += this.game.treasury.dispense(1);
-  }
-
-
-  foreignAid() {
-    this.coins += this.game.treasury.dispense(2);
-  }
-
-  coup() {
-    this.coins -= this.game.treasury.collect(7);
-  }
-
-  receiveCoup(idx) {
-    this.returnInfluence(idx, true);
-  }
-
-  tax() {
-    this.coins += this.game.treasury.dispense(3);
-  }
-
-  assassinate() {
-    this.coins -= this.game.treasury.collect(3);
-  }
-
-  receiveAssassinate(idx) {
-    this.returnInfluence(idx, true);
-  }
-
-  receiveDoubleAssassinate() {
-    while (this.cards.length) {
-      let lastCard = this.cards.pop();
-      this.game.courtDeck.faceUpCards.push(lastCard);
-    }
-  }
-
-  steal() {
-    this.coins += Math.min(2, this.opponent.coins);
-  }
-
-  receiveSteal() {
-    this.coins -= Math.min(2, this.coins);
+  reshuffleCard(idx) {
+    let reshuffledCard = this.cards[idx];
+    this.cards = this.cards.filter((_, i) => (i != idx));
+    this.game.courtDeck.returnCard(reshuffledCard);
+    this.cards = this.cards.concat(this.game.courtDeck.deal(1));
+    this.render();
   }
 
   exchangePartOne() {
     this.cards = this.cards.concat(this.game.courtDeck.deal(2));
+    this.flipAllCardsUp();
+    this.render();
   }
 
   exchangePartTwo(idx1, idx2) {
-    const [sortedIdx1, sortedIdx2] = [idx1, idx2].sort();
-    let card1 = this.cards[sortedIdx1];
-    let card2 = this.cards[sortedIdx2];
-    [card1, card2].forEach(card => this.game.courtDeck.returnCard(card));
-    debugger
-    this.cards = [...this.cards.slice(0, sortedIdx1), ...this.cards.slice(sortedIdx1 + 1, sortedIdx2), ...this.cards.slice(sortedIdx2 + 1)]
+    this.cards = this.cards.filter((_, i) => (i != idx1 && i != idx2));
+    this.render();
+  }
+
+  prove(character) {
+    return this.cards.map(card => card.character).indexOf(character);
+  }
+
+  renderControls(newControls) {
+    let controls = this.rootEl.childNodes[0];
+    removeAllChildNodes(controls);
+    controls.appendChild(newControls);
   }
 
   render() {
-    let playerName = createElement('div',
-      {
-        class: 'player-name',
-        text: `<h1>Player ${this.idx === 1 ? 'One' : 'Two'}</h2>`,
-      }
-    );
+    let playerControls = createElement('div', { id: 'player-controls' });
     let hand = createElement('div',
-      { class: 'player-cards' },
+      { id: 'player-cards' },
       ...this.cards.map(card => card.render())
     );
+    let discardPile = createElement('div', { id: 'discard-pile' });
+    if (this.upCards.length > 0) {
+      this.upCards.forEach(card => {
+        card.flipUp();
+        let renderedCard = card.render();
+        discardPile.appendChild(renderedCard);
+      });
+    }
     let coinsArray = new Array(this.coins).fill(1).map(_ => createCoin());
     let coins = createElement('div',
-      { class: 'player-coins' },
+      { id: 'player-coins' },
       ...coinsArray
     );
-    // let messages = this.gameLog.map(message => createElement('li', { text: `<p>Time: ${message.time}</p><p>${message.msg}</p>`}))
-    // let messageList = createElement('ul', { class: 'game-log' }, ...messages);
-    // let messageTrigger = createElement('div', { class: 'game-log-hover-trigger' }, messageList);
-    // playerName.appendChild(messageTrigger);
-    return [playerName, hand, coins];
+    removeAllChildNodes(this.rootEl);
+    [playerControls, coins, hand, discardPile].forEach(newEl => {
+      this.rootEl.appendChild(newEl);
+    });
   }
 }

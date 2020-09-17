@@ -26,9 +26,10 @@
   border-radius: 40px;
   overflow: hidden;
   background-repeat: repeat;
-  box-shadow: 0 0 10px $cdt-black-shadow;
+  box-shadow: 0 0 40px $cdt-black-shadow;
   transition: all .2s ease-in-out;
   transform: scale(0.9);
+  margin-top: -1%;
 }
 
 #main-menu .card-back-header {
@@ -233,9 +234,25 @@
 
 #card.face-down .card-tint { background-color: $cdt-blue; opacity: 0.6; }
 #main-menu .card-tint { background-color: $cdt-blue; opacity: 0.6; }
+#back-to-menu .card-tint { background-color: $cdt-blue; opacity: 0.6; }
 
 #card.captain .card-header { color: $cdt-blue }
 #card.duke .card-header { color: $cdt-purple }
 #card.ambassador .card-header { color: $cdt-green }
 #card.contessa .card-header { color: $cdt-red }
 #card.assassin .card-header { color: $cdt-black }
+
+#card.selectable {
+  transform: scale(1.15);
+  box-shadow: 0 0 50px $cdt-black;
+  cursor: pointer;
+  &.selected {
+    border: 5px solid $cdt-green;
+    box-sizing: border-box;
+  }
+}
+
+#discard-pile > #card {
+  transform: scale(0.6);
+  filter: grayscale(80%);
+}

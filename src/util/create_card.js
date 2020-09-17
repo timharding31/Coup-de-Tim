@@ -1,5 +1,5 @@
 import createElement from './create_element';
-const paper = require('../images/paper_texture.png');
+const paper = require('../assets/images/paper_texture.png');
 
 export default ({ character, image, symbol, effect, counteraction, brushStroke }, deckCount, idx) => {
   const characterImage = createElement('img', {

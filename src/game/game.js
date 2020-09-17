@@ -1,38 +1,28 @@
 import CourtDeck from './court_deck';
 import Treasury from './treasury';
 import Player from './player';
-// const moment = require('moment');
 
 
 export default class Game {
-  constructor() {
-    this.courtDeck = new CourtDeck();
-    this.treasury = new Treasury();
-    this.players = [new Player(1, this), new Player(2, this)];
+  constructor({ gameRoot, playerRoots, courtDeckRoot, treasuryRoot }) {
+    this.rootEl = gameRoot;
+    this.courtDeck = new CourtDeck(courtDeckRoot);
+    this.treasury = new Treasury(treasuryRoot);
+    this.players = [];
+    [1,2].forEach((playerIdx, rootIdx) => {
+      let player = new Player(playerRoots[rootIdx], playerIdx, this);
+      this.players.push(player);
+    });
     this.currentPlayer = null;
     this.currentTarget = null;
-    this.turnStepOne = this.turnStepOne.bind(this);
-    this.turnStepTwo = this.turnStepTwo.bind(this);
-    this.turnStepThree = this.turnStepThree.bind(this);
     this.gameOver = false;
     this.winner = null;
     this.started = false;
-    this.awaitGameOver();
-  }
 
-  awaitGameOver() {
-    const gameOverLoop = () => {
-      let checkGameOver = false;
-      if (this.started) checkGameOver = Boolean((this.playerOne.cards.length === 0) || (this.playerTwo.cards.length === 0));
-      if (checkGameOver) {
-        debugger
-        this.gameOver = true;
-        this.winner = [this.playerOne, this.playerTwo].filter(player => player.cards.length > 0)[0];
-      } else {
-        setTimeout(gameOverLoop, 0);
-      }
-    }
-    gameOverLoop();
+    this.switchTurns = this.switchTurns.bind(this);
+    this.startGame = this.startGame.bind(this);
+    this.checkWinner = this.checkWinner.bind(this);
+    this.render = this.render.bind(this);
   }
 
   startGame() {
@@ -42,109 +32,29 @@ export default class Game {
     this.currentPlayer = this.playerOne;
     this.currentTarget = this.playerTwo;
     this.started = true;
+    this.currentPlayer.flipAllCardsUp();
+    this.render();
   }
 
   switchTurns() {
     this.currentPlayer = this.players[(this.players.indexOf(this.currentPlayer) + 1) % 2];
     this.currentTarget = this.players[(this.players.indexOf(this.currentTarget) + 1) % 2];
+    this.currentPlayer.flipAllCardsUp();
+    this.currentTarget.flipAllCardsDown();
+    this.render();
   }
 
-  // turnStepOne({ action, targetBlocked, targetChallenged }) {
-  //   if (['Income', 'Coup'].includes(action)) return this.turnStepTwo(action);
-  //   if (Boolean(JSON.parse(wasBlocked))) {
-  //   }
-  // }
-
-  turnStepOne({ action, wasBlocked, wasChallenged }) {
-    if (['Income', 'Coup'].includes(action)) return this.turnStepTwo(action);
-    if (Boolean(JSON.parse(wasBlocked))) return this.turnStepTwo();
-    if (Boolean(JSON.parse(wasChallenged))) {
-      let proven = this.currentPlayer.prove(action);
-      if (proven) {
-        let rand = Math.round(Math.random());
-        let lostCard = this.currentTarget.cards[rand];
-        this.currentTarget.returnInfluence(rand, true);
-        // let now = moment().format('h:mm:ss a');
-        // this.currentTarget.gameLog.push({ time: now, msg: `You lost your ${lostCard.character} due to an unsuccessful challenge` });
-        return this.turnStepOne({ action, wasBlocked: false, wasChallenged: false });
-      } else {
-        return this.turnStepTwo('Lost Challenge');
-      }
-    }
-    return this.turnStepTwo(action);
+  checkWinner() {
+    this.gameOver = Boolean((this.playerOne.cards.length === 0) || (this.playerTwo.cards.length === 0));
+    this.winner = [this.playerOne, this.playerTwo].filter(player => player.cards.length > 0)[0];
   }
 
-  turnStepTwo(action) {
-    switch(action) {
-      case 'Income':
-        this.currentPlayer.income();
-        this.readyForStepThree = true;
-        return action;
-      case 'Foreign Aid':
-        this.currentPlayer.foreignAid();
-        this.readyForStepThree = true;
-        return action;
-      case 'Coup':
-        this.currentPlayer.coup();
-        this.readyForStepThree = true;
-        return action;
-      case 'Tax':
-        this.currentPlayer.tax();
-        this.readyForStepThree = true;
-        return action;
-      case 'Assassinate':
-        this.currentPlayer.assassinate();
-        this.readyForStepThree = true;
-        return action;
-      case 'Steal':
-        this.currentPlayer.steal();
-        this.readyForStepThree = true;
-        return action;
-      case 'Exchange':
-        this.currentPlayer.exchangePartOne();
-        this.readyForStepThree = true;
-        return action;
-      default:
-        this.readyForStepThree = true;
-        return action;
-    }
+  render() {
+    this.currentPlayer.flipAllCardsUp();
+    this.currentTarget.flipAllCardsDown();
+    this.courtDeck.render();
+    this.treasury.render();
+    this.playerOne.render();
+    this.playerTwo.render();
   }
-
-  turnStepThree({ action, idx1, idx2 }) {
-    this.readyForStepThree = false;
-    switch(action) {
-      case 'Exchange':
-        this.currentPlayer.exchangePartTwo(Number(idx1), Number(idx2));
-        return 'Turn Complete';
-      case 'Coup':
-        this.currentTarget.receiveCoup(Number(idx1));
-        return 'Turn Complete';
-      case 'Assassinate':
-        this.currentTarget.receiveAssassinate(Number(idx1));
-        return 'Turn Complete';
-      case 'Steal':
-        this.currentTarget.receiveSteal();
-        return 'Turn Complete';
-      case 'Lost Challenge':
-        let lostCard = this.currentPlayer.cards[idx1];
-        // let now = moment().format('h:mm:ss a');
-        // this.currentPlayer.returnInfluence(Number(idx1), true);
-        // this.currentPlayer.gameLog.push({ time: now, msg: `You lost your ${lostCard.character} because your opponent successfully challenged` });
-        return 'Turn Complete';
-      default:
-        return 'Turn Complete';
-    }
-  }
-
-  // gameOver() {
-  //   return ((this.playerOne.cards.length === 0) || (this.playerTwo.cards.length === 0))
-  // }
-
-  // winner() {
-  //   if (this.gameOver()) {
-  //     return [this.playerOne, this.playerTwo].filter(player => player.cards.length > 0)[0];
-  //   } else {
-  //     return null;
-  //   }
-  // }
 }

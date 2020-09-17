@@ -1,14 +1,14 @@
 import createCard from '../util/create_card';
 import createFaceDownCard from '../util/create_face_down_card';
 
-import dukeOptions from '../characters/duke';
-import assassinOptions from '../characters/assassin';
-import ambassadorOptions from '../characters/ambassador';
-import captainOptions from '../characters/captain';
-import contessaOptions from '../characters/contessa';
+import dukeOptions from '../assets/characters/duke';
+import assassinOptions from '../assets/characters/assassin';
+import ambassadorOptions from '../assets/characters/ambassador';
+import captainOptions from '../assets/characters/captain';
+import contessaOptions from '../assets/characters/contessa';
 
-const cardBack = require('../images//brush-stroke/card_back.png');
-const paper = require('../images/paper_texture.png');
+const cardBack = require('../assets/images/brush-stroke/card_back.png');
+const paper = require('../assets/images/paper_texture.png');
 
 const renderOptionsMap = {
   Duke: dukeOptions,
