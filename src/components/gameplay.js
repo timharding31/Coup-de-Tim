@@ -44,13 +44,6 @@ export default class Gameplay {
   turnSwitchCallback() {
     clearDataset(this.gameRoot);
     this.game.switchTurns();
-    if (this.game.currentPlayer.idx === 2) {
-      this.currentControls = this.elements['player-two'].childNodes[0];
-      this.targetControls = this.elements['player-one'].childNodes[0];
-    } else {
-      this.currentControls = this.elements['player-one'].childNodes[0];
-      this.targetControls = this.elements['player-two'].childNodes[0];
-    }
     this.turnStartControls();
   }
 }

@@ -23,7 +23,6 @@ export default class Player {
     this.reshuffleCard = this.reshuffleCard.bind(this);
     this.exchangePartOne = this.exchangePartOne.bind(this);
     this.exchangePartTwo = this.exchangePartTwo.bind(this);
-    this.prove = this.prove.bind(this);
     this.renderControls = this.renderControls.bind(this);
     this.render = this.render.bind(this);
   }
@@ -34,10 +33,12 @@ export default class Player {
 
   flipAllCardsUp() {
     this.cards.forEach(card => card.flipUp());
+    this.render();
   }
 
   flipAllCardsDown() {
     this.cards.forEach(card => card.flipDown());
+    this.render();
   }
 
   payCoins(num) {
@@ -85,10 +86,6 @@ export default class Player {
   exchangePartTwo(idx1, idx2) {
     this.cards = this.cards.filter((_, i) => (i != idx1 && i != idx2));
     this.render();
-  }
-
-  prove(character) {
-    return this.cards.map(card => card.character).indexOf(character);
   }
 
   renderControls(newControls) {

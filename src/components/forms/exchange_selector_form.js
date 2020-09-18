@@ -30,8 +30,6 @@ export default (player) => {
     })
   });
 
-  // [header, submitButton].forEach(el => form.appendChild(el));
-
   return form;
 
 }

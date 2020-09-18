@@ -37,8 +37,8 @@ export default class DOMState {
     this.getTargetWasChallenged();
     this.playerLostChallengeIdx = Number(this.gameRootDataset.killIdx);
     this.targetLostChallengeIdx = Number(this.gameRootDataset.killIdx);
-    this.exchangeIndices = this.gameRootDataset.exchangeIndices ? JSON.parse(this.gameRootDataset.exchangeIndices) : [];
     this.killIdx = Number(this.gameRootDataset.killIdx);
+    this.exchangeIndices = this.gameRootDataset.exchangeIndices ? JSON.parse(this.gameRootDataset.exchangeIndices) : [];
     return this;
   }
 }

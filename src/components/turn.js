@@ -15,8 +15,7 @@ export default class Turn {
       blockableBy,
       receiptAmount,
       paymentAmount
-    }
-    ) {
+    }) {
     this.gameRoot = document.getElementById('game');
     this.domState = new DOMState();
     // domState = {
@@ -71,11 +70,10 @@ export default class Turn {
 
     if (challengeable || blockable) {
       this.promptTargetForChallenge();
-      // this.firstModal = createModalNew('block-challenge', 'target', action, this.currentPlayer, this.currentTarget);
     } else if (action === 'Coup') {
       this.settled = true;
+      this.playerDidKill = true;
       this.promptTargetForKillChoice();
-      // this.firstModal = createModalNew('forfeit-action', 'target', action, this.currentPlayer, this.currentTarget);
     } else {
       this.playerDidReceive = true;
       this.complete = true;
@@ -291,6 +289,4 @@ export default class Turn {
       this.currentTarget.loseCard(this.killIdx);
     }
   }
-
-  
 }
