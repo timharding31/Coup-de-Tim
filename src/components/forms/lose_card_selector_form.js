@@ -1,5 +1,6 @@
 import createElement from '../../util/create_element';
 import { clearDataset } from '../../util/dom_nodes_util';
+const redBrushstroke = require('../../assets/images/brush-stroke/contessa.png');
 
 export default (cause, player) => {
   let gameRoot = document.getElementById('game');
@@ -12,7 +13,13 @@ export default (cause, player) => {
     header = createElement('p', { text: 'Your oppoenent\'s action was successful, you must select an influence to Lose:' });
   }
   form.appendChild(header);
-  let submitButton = createElement('button', { text: 'Submit' });
+  let submitButton = createElement(
+    'button',
+    {
+      text: 'Submit',
+      style: `background-image: ${redBrushstroke.default}`
+    }
+  );
   form.appendChild(submitButton);
 
   let area;

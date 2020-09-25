@@ -243,10 +243,20 @@
 #card.assassin .card-header { color: $cdt-black }
 
 #card.selectable {
-  transform: scale(1.15);
+  transform: scale(1.10);
   box-shadow: 0 0 50px $cdt-black;
   cursor: pointer;
   &.selected {
+    border: 5px solid $cdt-black;
+    box-sizing: border-box;
+  }
+}
+
+#card.exchangeable {
+  transform: scale(1.10);
+  box-shadow: 0 0 50px $cdt-black;
+  cursor: pointer;
+  &.exchanged {
     border: 5px solid $cdt-green;
     box-sizing: border-box;
   }
