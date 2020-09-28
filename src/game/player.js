@@ -3,7 +3,8 @@ import createElement from '../util/create_element';
 import { removeAllChildNodes } from '../util/dom_nodes_util';
 
 export default class Player {
-  constructor(rootEl, idx, game) {
+  constructor(rootEl, idx, game, isComputer=false) {
+    this.isComputer = isComputer
     this.rootEl = rootEl;
     this.idx = idx;
     this.game = game;

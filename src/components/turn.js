@@ -1,6 +1,7 @@
 import blockChallengeForm from './forms/block_challenge_form';
 import loseCardSelector from './forms/lose_card_selector_form';
 import exchangeSelectorForm from './forms/exchange_selector_form';
+import computerPlayerChoice from './forms/computer_player_choice';
 import DOMState from './dom_state';
 
 export default class Turn {
@@ -67,6 +68,10 @@ export default class Turn {
       }
     }
 
+    if (this.currentPlayer.isComputer) {
+      let announcement = computerPlayerChoice(this.action);
+      this.currentPlayer.renderControls(announcement);
+    }
 
     if (challengeable || blockable) {
       this.promptTargetForChallenge();
@@ -75,9 +80,11 @@ export default class Turn {
       this.playerDidKill = true;
       this.promptTargetForKillChoice();
     } else {
-      this.playerDidReceive = true;
-      this.complete = true;
-      this.settled = true;
+      setTimeout(() => {
+        this.playerDidReceive = true;
+        this.complete = true;
+        this.settled = true;
+      }, 1000);
     }
 
     this.promptTargetForChallenge = this.promptTargetForChallenge.bind(this);
@@ -94,26 +101,56 @@ export default class Turn {
 
   // add block challenge modal to target's controls
   promptTargetForChallenge() {
-    let blockChallenge = blockChallengeForm(this.action, this.blockable, this.challengeable);
-    this.currentTarget.renderControls(blockChallenge);
-    blockChallenge.addEventListener('submit', (e) => {
-      e.preventDefault();
-      blockChallenge.remove();
-      this.domState = this.domState.refresh();
-      if (this.domState.playerWasBlocked) {
-        this.promptPlayerForChallenge();
-      } else if (this.domState.playerWasChallenged) {
-        if (this.playerWonChallengeIdx >= 0) {
-          this.currentPlayer.reshuffleCard(this.playerWonChallengeIdx);
-          this.currentPlayer.flipAllCardsUp();
-          this.promptTargetForLostChallengeChoice();
+    if (this.currentPlayer.isComputer) {
+      let blockChallenge = blockChallengeForm(this.action, this.blockable, this.challengeable);
+      this.currentTarget.renderControls(blockChallenge);
+      blockChallenge.addEventListener('submit', (e) => {
+        e.preventDefault();
+        blockChallenge.remove();
+        this.domState = this.domState.refresh();
+        if (this.domState.playerWasBlocked) {
+          this.promptPlayerForChallenge();
+        } else if (this.domState.playerWasChallenged) {
+          if (this.playerWonChallengeIdx >= 0) {
+            this.currentPlayer.reshuffleCard(this.playerWonChallengeIdx);
+            this.currentPlayer.flipAllCardsUp();
+            this.promptTargetForLostChallengeChoice();
+          } else {
+            this.promptPlayerForLostChallengeChoice();
+          }
         } else {
-          this.promptPlayerForLostChallengeChoice();
+          this.targetAllowedPlayer();
         }
+      });
+    } else {
+      let computerChallenged = this.currentTarget.decideChallenge(this.action);
+      let computerBlocked = this.currentTarget.decideBlock(this.action);
+      if (computerChallenged) {
+        let announcement = computerPlayerChoice(`Challenge ${this.action}`);
+        this.currentTarget.renderControls(announcement);
+      } else if (computerBlocked) {
+        let announcement = computerPlayerChoice(`Block ${this.action}`);
+        this.currentTarget.renderControls(announcement);
       } else {
-        this.targetAllowedPlayer();
+        let announcement = computerPlayerChoice(`Allow ${this.action}`);
+        this.currentTarget.renderControls(announcement);
       }
-    });
+      setTimeout(() => {
+        if (computerChallenged) {
+          if (this.playerWonChallengeIdx >= 0) {
+            this.currentPlayer.reshuffleCard(this.playerWonChallengeIdx);
+            this.currentPlayer.flipAllCardsUp();
+            this.promptTargetForLostChallengeChoice();
+          } else {
+            this.promptPlayerForLostChallengeChoice();
+          }
+        } else if (computerBlocked) {
+          this.promptPlayerForChallenge();
+        } else {
+          this.targetAllowedPlayer();
+        }
+      }, 1000);
+    }
   }
 
   // player was allowed
@@ -143,88 +180,156 @@ export default class Turn {
 
   // add block challenge modal to player's controls
   promptPlayerForChallenge() {
-    let challengeForm = blockChallengeForm('Block', false, true);
-    this.currentPlayer.renderControls(challengeForm);
-    challengeForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      challengeForm.remove();
-      this.domState = this.domState.refresh();
-      if (this.domState.targetWasChallenged) {
-        if (this.targetWonChallengeIdx >= 0) {
-          this.currentTarget.reshuffleCard(this.targetWonChallengeIdx);
-          this.promptPlayerForLostChallengeChoice();
-        } else {
-          this.promptTargetForLostChallengeChoice();
-        }
-      } else {
-        this.playerDidKill = false;
-        this.playerDidSteal = false;
-        this.playerDidReceive = true;
-        this.complete = true;
+    if (this.currentPlayer.isComputer) {
+      let blockWasChallenged = this.currentPlayer.decideBlockChallenge(this.action);
+      if (blockWasChallenged) {
+        let announcement = computerPlayerChoice(`Challenge BLOCK`);
+        this.currentPlayer.renderControls(announcement);
       }
-    })
+      setTimeout(() => {
+        if (blockWasChallenged) {
+          if (this.targetWonChallengeIdx >= 0) {
+            this.currentTarget.reshuffleCard(this.targetWonChallengeIdx);
+            this.promptPlayerForLostChallengeChoice();
+          } else {
+            this.promptTargetForLostChallengeChoice();
+          }
+        } else {
+          this.playerDidKill = false;
+          this.playerDidSteal = false;
+          this.playerDidReceive = true;
+          this.complete = true;
+        }
+      }, 1000);
+    } else {
+      let challengeForm = blockChallengeForm('Block', false, true);
+      this.currentPlayer.renderControls(challengeForm);
+      challengeForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        challengeForm.remove();
+        this.domState = this.domState.refresh();
+        if (this.domState.targetWasChallenged) {
+          if (this.targetWonChallengeIdx >= 0) {
+            this.currentTarget.reshuffleCard(this.targetWonChallengeIdx);
+            this.promptPlayerForLostChallengeChoice();
+          } else {
+            this.promptTargetForLostChallengeChoice();
+          }
+        } else {
+          this.playerDidKill = false;
+          this.playerDidSteal = false;
+          this.playerDidReceive = true;
+          this.complete = true;
+        }
+      })
+    }
   }
 
   // (cause=challenge/action, player=currentPlayer/currentTarget)
   // ask player to choose card after lost challenge
   promptPlayerForLostChallengeChoice() {
-    this.playerLostChallenge = true;
-    let lostChallengeForm = loseCardSelector('challenge', this.currentPlayer);
-    this.currentPlayer.renderControls(lostChallengeForm);
-    lostChallengeForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      lostChallengeForm.remove();
-      this.domState = this.domState.refresh();
-      this.playerLostChallengeIdx = this.domState.playerLostChallengeIdx;
-      this.settled = true;
-      this.endTurn();
-    })
+    if (this.currentPlayer.isComputer) {
+      let announcement = computerPlayerChoice(`Lost Challenge`);
+      this.currentPlayer.renderControls(announcement);
+      setTimeout(() => {
+        this.playerLostChallenge = true;
+        this.playerLostChallengeIdx = this.currentPlayer.randKillIdx();
+        this.settled = true;
+        this.endTurn();
+      }, 1000);
+    } else {
+      this.playerLostChallenge = true;
+      let lostChallengeForm = loseCardSelector('challenge', this.currentPlayer);
+      this.currentPlayer.renderControls(lostChallengeForm);
+      lostChallengeForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        lostChallengeForm.remove();
+        this.domState = this.domState.refresh();
+        this.playerLostChallengeIdx = this.domState.playerLostChallengeIdx;
+        this.settled = true;
+        this.endTurn();
+      })
+    }
   }
 
   // ask target to choose card after lost challenge
   promptTargetForLostChallengeChoice() {
-    this.currentTarget.flipAllCardsUp();
-    this.targetLostChallenge = true;
-    let lostChallengeForm = loseCardSelector('challenge', this.currentTarget);
-    this.currentTarget.renderControls(lostChallengeForm);
-    lostChallengeForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      this.currentTarget.flipAllCardsDown();
-      lostChallengeForm.remove();
-      this.domState = this.domState.refresh();
-      this.targetLostChallengeIdx = this.domState.targetLostChallengeIdx;
-      this.settled = true;
-      setTimeout(this.targetAllowedPlayer, 10);
-    })
+    if (this.currentPlayer.isComputer) {
+      let announcement = computerPlayerChoice(`Won Challenge`);
+      this.currentPlayer.renderControls(announcement);
+      this.targetLostChallenge = true;
+      this.currentTarget.flipAllCardsUp();
+      let lostChallengeForm = loseCardSelector('challenge', this.currentTarget);
+      this.currentTarget.renderControls(lostChallengeForm);
+      lostChallengeForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        this.currentTarget.flipAllCardsDown();
+        lostChallengeForm.remove();
+        this.domState = this.domState.refresh();
+        this.targetLostChallengeIdx = this.domState.targetLostChallengeIdx;
+        this.settled = true;
+        setTimeout(this.targetAllowedPlayer, 10);
+      })
+    } else {
+      let announcement = computerPlayerChoice(`Lost Challenge`);
+      this.currentTarget.renderControls(announcement);
+      setTimeout(() => {
+        this.targetLostChallenge = true;
+        this.targetLostChallengeIdx = this.currentTarget.randKillIdx();
+        this.settled = true;
+        this.targetAllowedPlayer();
+      }, 1000);
+    }
   }
 
   // ask target to choose card after Assassination or Coup
   promptTargetForKillChoice() {
-    this.currentTarget.flipAllCardsUp();
-    let killForm = loseCardSelector('action', this.currentTarget);
-    this.currentTarget.renderControls(killForm);
-    killForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      this.currentTarget.flipAllCardsDown();
-      killForm.remove();
-      this.domState = this.domState.refresh();
-      this.killIdx = this.domState.killIdx;
-      this.endTurn();
-    })
+    if (this.currentPlayer.isComputer) {
+      let announcement = computerPlayerChoice(`${this.action} Successful`);
+      this.currentPlayer.renderControls(announcement);
+      this.currentTarget.flipAllCardsUp();
+      let killForm = loseCardSelector('action', this.currentTarget);
+      this.currentTarget.renderControls(killForm);
+      killForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        this.currentTarget.flipAllCardsDown();
+        killForm.remove();
+        this.domState = this.domState.refresh();
+        this.killIdx = this.domState.killIdx;
+        this.endTurn();
+      })
+    } else {
+      let announcement = computerPlayerChoice(`Choosing influence to lose`);
+      this.currentTarget.renderControls(announcement);
+      setTimeout(() => {
+        this.killIdx = this.currentTarget.randKillIdx()
+        this.endTurn();
+      }, 1000)
+    }
   }
 
   // ask player to choose return cards after Exchange
   promptPlayerForExchangeChoice() {
-    let exchangeForm = exchangeSelectorForm(this.currentPlayer);
-    this.currentPlayer.renderControls(exchangeForm);
-    exchangeForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      exchangeForm.remove();
-      this.domState = this.domState.refresh();
-      const [idx1, idx2] = this.domState.exchangeIndices;
-      this.currentPlayer.exchangePartTwo(idx1, idx2);
-      this.endTurn();
-    })
+    if (this.currentPlayer.isComputer) {
+      let announcement = computerPlayerChoice(`Choosing influences to return`);
+      this.currentPlayer.renderControls(announcement);
+      const [idx1, idx2] = this.currentPlayer.randExchangeIdx();
+      setTimeout(() => {
+        this.currentPlayer.exchangePartTwo(idx1, idx2);
+        this.endTurn();
+      }, 1000);
+    } else {
+      let exchangeForm = exchangeSelectorForm(this.currentPlayer);
+      this.currentPlayer.renderControls(exchangeForm);
+      exchangeForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        exchangeForm.remove();
+        this.domState = this.domState.refresh();
+        const [idx1, idx2] = this.domState.exchangeIndices;
+        this.currentPlayer.exchangePartTwo(idx1, idx2);
+        this.endTurn();
+      })
+    }
   }
 
   endTurn() {

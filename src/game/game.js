@@ -3,6 +3,7 @@ import Treasury from './treasury';
 import Player from './player';
 import createElement from '../util/create_element';
 import { removeAllChildNodes } from '../util/dom_nodes_util';
+import ComputerPlayer from './computer_player';
 
 
 export default class Game {
@@ -11,11 +12,13 @@ export default class Game {
     this.rootEl = gameRoot;
     this.courtDeck = new CourtDeck(courtDeckRoot);
     this.treasury = new Treasury(treasuryRoot);
-    this.players = [];
-    [1,2].forEach((playerIdx, rootIdx) => {
-      let player = new Player(playerRoots[rootIdx], playerIdx, this);
-      this.players.push(player);
-    });
+    let playerOne = new Player(playerRoots[0], 1, this);
+    let playerTwo = new ComputerPlayer(playerRoots[1], 2, this);
+    this.players = [playerOne, playerTwo];
+    // [1,2].forEach((playerIdx, rootIdx) => {
+    //   let player = new Player(playerRoots[rootIdx], playerIdx, this);
+    //   this.players.push(player);
+    // });
     this.currentPlayer = null;
     this.currentTarget = null;
     this.gameOver = false;

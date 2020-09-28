@@ -3,6 +3,7 @@ import createElement from '../util/create_element';
 import gameControls from './game_controls';
 import { removeAllChildNodes, clearDataset } from '../util/dom_nodes_util';
 import { backToMenu } from '../navigation/main_menu';
+import turnSwitch from './turn_switch';
 const regeneratorRuntime = require("regenerator-runtime");
 
 export default class Gameplay {
@@ -37,8 +38,13 @@ export default class Gameplay {
   }
 
   turnStartControls() {
-    let turnStartControls = gameControls(this.game, this.game.currentPlayer, this.turnSwitchCallback.bind(this));
-    this.game.currentPlayer.renderControls(turnStartControls);
+    if (this.game.currentPlayer.isComputer) {
+      let computerAction = this.game.currentPlayer.decideTurn()
+      setTimeout(() => turnSwitch(this.game, computerAction, this.turnSwitchCallback.bind(this)), 1000)
+    } else {
+      let turnStartControls = gameControls(this.game, this.game.currentPlayer, this.turnSwitchCallback.bind(this));
+      this.game.currentPlayer.renderControls(turnStartControls);
+    }
   }
 
   turnSwitchCallback() {
