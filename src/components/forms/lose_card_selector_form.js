@@ -1,11 +1,13 @@
 import createElement from '../../util/create_element';
 import { clearDataset } from '../../util/dom_nodes_util';
 const redBrushstroke = require('../../assets/images/brush-stroke/contessa.png');
+const paper = require('../../assets/images/paper_texture.png');
 
 export default (cause, player) => {
   let gameRoot = document.getElementById('game');
   clearDataset(gameRoot);
-  let form = createElement('form', { class: 'lose-challenge-form' });
+  let formTint = createElement('div', { id: 'form-tint' });
+  let form = createElement('form', { class: 'lose-challenge-form', style: `background-image: url("${paper.default}");` }, formTint);
   let header;
   if (cause === 'challenge') {
     header = createElement('p', { text: 'You have lost a challenge, you must select an influence to Lose:' });
@@ -17,7 +19,7 @@ export default (cause, player) => {
     'button',
     {
       text: 'Submit',
-      style: `background-image: ${redBrushstroke.default}`
+      style: `background-image: url('${redBrushstroke.default}')`
     }
   );
   form.appendChild(submitButton);

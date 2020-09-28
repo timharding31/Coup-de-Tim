@@ -1,18 +1,20 @@
 import createElement from '../../util/create_element';
 import { clearDataset } from '../../util/dom_nodes_util';
 const greenBrushstroke = require('../../assets/images/brush-stroke/ambassador.png');
+const paper = require('../../assets/images/paper_texture.png');
 
 export default (player) => {
   let gameRoot = document.getElementById('game');
   clearDataset(gameRoot);
-  let form = createElement('form', { class: 'exchange-part-two-form' });
+  let formTint = createElement('div', { id: 'form-tint' });
+  let form = createElement('form', { class: 'exchange-part-two-form', style: `background-image: url("${paper.default}");` }, formTint);
   let header = createElement('p', { text: 'Please select two influences to return to the Court Deck:' });
   form.appendChild(header);
   let submitButton = createElement(
     'button',
     {
       text: 'Submit',
-      style: `background-image: url("${greenBrushstroke}")`
+      style: `background-image: url('${greenBrushstroke.default}')`
     }
   );
   form.appendChild(submitButton);

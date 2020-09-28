@@ -5,12 +5,14 @@ const redBrushstroke = require('../../assets/images/brush-stroke/contessa.png');
 const purpleBrushstroke = require('../../assets/images/brush-stroke/duke.png');
 const blueBrushstroke = require('../../assets/images/brush-stroke/captain.png');
 const blackBrushstroke = require('../../assets/images/brush-stroke/assassin.png');
+const paper = require('../../assets/images/paper_texture.png');
 
 export default (action, blockable, challengeable) => {
   let gameRoot = document.getElementById('game');
   clearDataset(gameRoot);
   let recipient = (action === 'Block') ? 'target' : 'player';
-  let form = createElement('form', { class: 'block-challenge-form' });
+  let formTint = createElement('div', { id: 'form-tint' });
+  let form = createElement('form', { class: 'block-challenge-form', style: `background-image: url("${paper.default}");` }, formTint);
 
   let blockButtonBackground;
   switch(action) {
@@ -33,8 +35,9 @@ export default (action, blockable, challengeable) => {
     {
       id: 'allow',
       text: 'Allow',
-      style: `background-image: url("${greenBrushstroke.default}")`,
-      type: 'submit'
+      style: `background-image: url('${greenBrushstroke.default}')`,
+      type: 'submit',
+      // onClick: () => document.forms['block-challenge-form'].submit(),
     }
   );
   let blockButton;
@@ -47,7 +50,7 @@ export default (action, blockable, challengeable) => {
         id: 'challenge',
         text: 'Challenge',
         type: 'submit',
-        style: `background-image: url("${blackBrushstroke.default}")`,
+        style: `background-image: url('${blackBrushstroke.default}')`,
         onClick: () => gameRoot.setAttribute(`data-${recipient}-was-challenged`, true)
       }
     );
@@ -60,7 +63,7 @@ export default (action, blockable, challengeable) => {
         id: 'block',
         text: 'Block',
         type: 'submit',
-        style: `background-image: url("${blockButtonBackground}")`,
+        style: `background-image: url('${blockButtonBackground}')`,
         onClick: () => gameRoot.setAttribute(`data-${recipient}-was-blocked`, true)
       }
     );

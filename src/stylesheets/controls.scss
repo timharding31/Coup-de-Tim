@@ -87,45 +87,83 @@
 #player-controls > form {
   width: 90%;
   height: 80%;
-  margin: 10% 5%;
+  margin: 15% 5%;
+  border-radius: 20px;
   display: flex;
   padding-top: 20%;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+  position: relative;
+  overflow: hidden;
+  background-size: 200%;
+  background-repeat: repeat;
+  border: 1px solid $cdt-blue-gray-border;
+  box-shadow: inset 0px 0px 30px 5px $cdt-blue-gray, 0 0 10px 0 $cdt-black-shadow;
+  box-sizing: border-box;
+  &>div#form-tint {
+    background-color: $cdt-blue-gray;
+    opacity: 0.25;
+    position: absolute;
+    z-index: 1;
+    width: 110%;
+    height: 110%;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    margin: -5%;
+  }
   &>p {
     text-align: center;
+    text-shadow: 1px 1px 1px rgba(255, 253, 244, 0.25);
+    padding: 0 4%;
     margin-top: 5%;
-    font-weight: 500;
+    font-weight: 600;
     color: $cdt-red;
+    z-index: 1;
+  }
+  &>button {
+    background-color: transparent;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    margin-top: 20%;
+    color: $cdt-white;
+    text-shadow: 0.25px 0.25px 0px $cdt-white-shadow;
+    opacity: 95%;
+    font-weight: 700;
+    width: 80%;
+    height: 12%;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    z-index: 4;
+    &:hover { transform: scale(1.1); text-shadow: 0.5px 0.5px 0px $cdt-white-shadow; }
   }
 }
 
 .response-buttons {
+  margin-top: 20%;
   display: flex;
   flex-direction: column;
   height: 40%;
+  width: 100%;
   justify-content: space-around;
   align-items: center;
+  z-index: 1;
   &>button {
-    background-color: $cdt-white;
-    color: $cdt-red;
+    background-color: transparent;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    color: $cdt-white;
+    text-shadow: 0.25px 0.25px 0px $cdt-white-shadow;
+    opacity: 95%;
     font-weight: 700;
+    width: 80%;
+    height: 30%;
     outline: none;
-    width: 100%;
-    height: 25%;
-    border-radius: 50px;
-    outline: none;
-    border: 2px solid $cdt-red;
+    border: none;
     cursor: pointer;
-    &:hover {
-      background-color: $cdt-red;
-      color: $cdt-white
-    }
-    &#allow {
-      color: $cdt-green;
-      border-color: $cdt-green;
-      &:hover { background-color: $cdt-green; color: $cdt-white }
-    }
+    &:hover { transform: scale(1.1); text-shadow: 0.5px 0.5px 0px $cdt-white-shadow; }
   }
 }
