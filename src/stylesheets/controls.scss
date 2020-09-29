@@ -201,14 +201,14 @@
   justify-content: flex-start;
   align-items: center;
   z-index: 100;
-  background-color: $cdt-blue-gray;
+  background-color: $cdt-blue-gray-modal;
   &>div#game-over-background {
     position: absolute;
     left: 0;
     right: 0;
     top: 0;
     bottom: 0;
-    opacity: 0.4;
+    opacity: 0.5;
     z-index: 90;
     background-size: 30% 30%;
     background-repeat: repeat;
