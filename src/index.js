@@ -1,7 +1,6 @@
 import './application.scss';
 import createElement from './util/create_element';
 
-import Gameplay from './components/gameplay';
 import { MainMenu } from './navigation/main_menu';
 const stucco = require('./assets/images/stucco_texture.png');
 

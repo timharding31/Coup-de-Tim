@@ -1,7 +1,7 @@
-import blockChallengeForm from './forms/block_challenge_form';
-import loseCardSelector from './forms/lose_card_selector_form';
-import exchangeSelectorForm from './forms/exchange_selector_form';
-import computerPlayerChoice from './forms/computer_player_choice';
+import blockChallengeForm from './forms_tips/block_challenge_form';
+import loseCardSelector from './forms_tips/lose_card_selector_form';
+import exchangeSelectorForm from './forms_tips/exchange_selector_form';
+import computerPlayerMessage from './forms_tips/computer_player_message';
 import DOMState from './dom_state';
 
 export default class Turn {
@@ -69,7 +69,7 @@ export default class Turn {
     }
 
     if (this.currentPlayer.isComputer) {
-      let announcement = computerPlayerChoice(this.action);
+      let announcement = computerPlayerMessage(this.action);
       this.currentPlayer.renderControls(announcement);
     } else {
       this.currentTarget.learnOpponentMove(this.action);
@@ -128,13 +128,13 @@ export default class Turn {
       let computerChallenged = this.currentTarget.decideChallenge(this.action);
       let computerBlocked = this.currentTarget.decideBlock(this.action);
       if (computerChallenged) {
-        let announcement = computerPlayerChoice(`Challenge ${this.action}`);
+        let announcement = computerPlayerMessage(`Challenge ${this.action}`);
         this.currentTarget.renderControls(announcement);
       } else if (computerBlocked) {
-        let announcement = computerPlayerChoice(`Block ${this.action}`);
+        let announcement = computerPlayerMessage(`Block ${this.action}`);
         this.currentTarget.renderControls(announcement);
       } else {
-        let announcement = computerPlayerChoice(`Allow ${this.action}`);
+        let announcement = computerPlayerMessage(`Allow ${this.action}`);
         this.currentTarget.renderControls(announcement);
       }
       setTimeout(() => {
@@ -150,7 +150,7 @@ export default class Turn {
         } else {
           this.targetAllowedPlayer();
         }
-      }, 1000);
+      }, 100);
     }
   }
 
@@ -184,10 +184,10 @@ export default class Turn {
     if (this.currentPlayer.isComputer) {
       let blockWasChallenged = this.currentPlayer.decideBlockChallenge(this.action);
       if (blockWasChallenged) {
-        let announcement = computerPlayerChoice(`Challenge Block`);
+        let announcement = computerPlayerMessage(`Challenge Block`);
         this.currentPlayer.renderControls(announcement);
       } else {
-        let announcement = computerPlayerChoice('Fine, be that way');
+        let announcement = computerPlayerMessage('Fine, be that way');
         this.currentPlayer.renderControls(announcement);
       }
       setTimeout(() => {
@@ -233,7 +233,7 @@ export default class Turn {
   // ask player to choose card after lost challenge
   promptPlayerForLostChallengeChoice() {
     if (this.currentPlayer.isComputer) {
-      let announcement = computerPlayerChoice(`Lost Challenge`);
+      let announcement = computerPlayerMessage(`Lost Challenge`);
       this.currentPlayer.renderControls(announcement);
       setTimeout(() => {
         this.playerLostChallenge = true;
@@ -242,7 +242,7 @@ export default class Turn {
         this.endTurn();
       }, 1000);
     } else {
-      let announcement = computerPlayerChoice(`Won Challenge`);
+      let announcement = computerPlayerMessage(`Won Challenge`);
       this.currentTarget.renderControls(announcement);
       this.playerLostChallenge = true;
       let lostChallengeForm = loseCardSelector('challenge', this.currentPlayer);
@@ -261,7 +261,7 @@ export default class Turn {
   // ask target to choose card after lost challenge
   promptTargetForLostChallengeChoice() {
     if (this.currentPlayer.isComputer) {
-      let announcement = computerPlayerChoice(`Won Challenge`);
+      let announcement = computerPlayerMessage(`Won Challenge`);
       this.currentPlayer.renderControls(announcement);
       this.targetLostChallenge = true;
       let lostChallengeForm = loseCardSelector('challenge', this.currentTarget);
@@ -275,7 +275,7 @@ export default class Turn {
         setTimeout(this.targetAllowedPlayer, 10);
       })
     } else {
-      let announcement = computerPlayerChoice(`Lost Challenge`);
+      let announcement = computerPlayerMessage(`Lost Challenge`);
       this.currentTarget.renderControls(announcement);
       setTimeout(() => {
         this.targetLostChallenge = true;
@@ -293,7 +293,7 @@ export default class Turn {
       return
     }
     if (this.currentPlayer.isComputer) {
-      let announcement = computerPlayerChoice(`${this.action}`);
+      let announcement = computerPlayerMessage(`${this.action}`);
       this.currentPlayer.renderControls(announcement);
       let killForm = loseCardSelector('action', this.currentTarget);
       this.currentTarget.renderControls(killForm);
@@ -305,7 +305,7 @@ export default class Turn {
         this.endTurn();
       })
     } else {
-      let announcement = computerPlayerChoice(`Choosing influence to lose`);
+      let announcement = computerPlayerMessage(`Choosing influence to lose`);
       this.currentTarget.renderControls(announcement);
       setTimeout(() => {
         this.killIdx = this.currentTarget.randKillIdx()
@@ -317,7 +317,7 @@ export default class Turn {
   // ask player to choose return cards after Exchange
   promptPlayerForExchangeChoice() {
     if (this.currentPlayer.isComputer) {
-      let announcement = computerPlayerChoice(`Choosing influences to return`);
+      let announcement = computerPlayerMessage(`Choosing influences to return`);
       this.currentPlayer.renderControls(announcement);
       const [idx1, idx2] = this.currentPlayer.randExchangeIdx();
       setTimeout(() => {

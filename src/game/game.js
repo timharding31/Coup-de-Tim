@@ -2,10 +2,9 @@ import CourtDeck from './court_deck';
 import Treasury from './treasury';
 import Player from './player';
 import createElement from '../util/create_element';
-import { removeAllChildNodes } from '../util/dom_nodes_util';
 import Gameplay from '../components/gameplay';
 import ComputerPlayer from './computer_player';
-import computerPlayerChoice from '../components/forms/computer_player_choice';
+import computerPlayerMessage from '../components/forms_tips/computer_player_message';
 const paper = require('../assets/images/paper_texture.png');
 
 
@@ -18,10 +17,6 @@ export default class Game {
     let computerPlayer = new ComputerPlayer(playerRoots[0], 1, this);
     let humanPlayer = new Player(playerRoots[1], 2, this);
     this.players = [computerPlayer, humanPlayer];
-    // [1,2].forEach((playerIdx, rootIdx) => {
-    //   let player = new Player(playerRoots[rootIdx], playerIdx, this);
-    //   this.players.push(player);
-    // });
     this.currentPlayer = null;
     this.currentTarget = null;
     this.gameOver = false;
@@ -53,7 +48,6 @@ export default class Game {
 
   restartGame() {
     let parentEl = this.rootEl.parentNode
-    // removeAllChildNodes(this.rootEl);
     new Gameplay(parentEl);
   }
 
@@ -77,8 +71,8 @@ export default class Game {
       let restartButton = createElement('button', { text: 'Restart', type: 'button', onClick: this.restartGame })
       let exitButton = createElement('button', { text: 'Exit', type: 'button', onClick: this.exitGame })
       let gameOverMessage = createElement('div', { id: 'game-over' }, background, header, restartButton, exitButton);
-      let winnerTxt = computerPlayerChoice('Winner');
-      let loserTxt = computerPlayerChoice('Loser');
+      let winnerTxt = computerPlayerMessage('Winner');
+      let loserTxt = computerPlayerMessage('Loser');
       if (this.winner.isComputer) {
         this.winner.flipAllCardsUp();
         this.winner.render();

@@ -4,13 +4,12 @@ import gameControls from './game_controls';
 import { removeAllChildNodes, clearDataset } from '../util/dom_nodes_util';
 import { backToMenu } from '../navigation/main_menu';
 import turnSwitch from './turn_switch';
-import computerPlayerChoice from './forms/computer_player_choice';
-const regeneratorRuntime = require("regenerator-runtime");
+import computerPlayerMessage from './forms_tips/computer_player_message';
+// const regeneratorRuntime = require("regenerator-runtime");
 
 export default class Gameplay {
-  constructor(rootEl, tutorial=false) {
+  constructor(rootEl) {
     removeAllChildNodes(rootEl);
-    this.tutorial = tutorial;
     this.rootEl = rootEl;
     this.gameRoot = createElement('div', { id: 'game' });
     const back = backToMenu(rootEl);
@@ -33,7 +32,7 @@ export default class Gameplay {
     });
     this.game.startGame();
     this.gameOver = false;
-    if (!tutorial) this.turnStartControls();
+    this.turnStartControls();
 
     this.turnSwitchCallback = this.turnSwitchCallback.bind(this);
     this.turnStartControls = this.turnStartControls.bind(this);
@@ -44,7 +43,7 @@ export default class Gameplay {
       let computerAction = this.game.currentPlayer.decideTurn()
       setTimeout(() => turnSwitch(this.game, computerAction, this.turnSwitchCallback.bind(this)), 100)
     } else {
-      let announcement = computerPlayerChoice('Waiting');
+      let announcement = computerPlayerMessage('Waiting');
       this.game.currentTarget.renderControls(announcement);
       let turnStartControls = gameControls(this.game, this.game.currentPlayer, this.turnSwitchCallback.bind(this));
       this.game.currentPlayer.renderControls(turnStartControls);

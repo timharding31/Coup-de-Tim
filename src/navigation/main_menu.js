@@ -4,6 +4,7 @@ import Gameplay from '../components/gameplay';
 import { removeAllChildNodes } from '../util/dom_nodes_util';
 const cardBack = require('../assets/images/intersection_texture.png');
 const upArrow = require('../assets/images/up_arrow.png');
+import Tutorial from '../components/tutorial';
 
 export class MainMenu {
   constructor(rootEl) {
@@ -12,8 +13,9 @@ export class MainMenu {
     this.cardMenu = createFaceDownCard();
     this.cardMenu.setAttribute('id', 'main-menu');
     let startButton = createElement('button', { id: 'start-game', text: 'Start Game', onClick: this.startGame.bind(this) })
+    let tutorialButton = createElement('button', { id: 'start-tutorial', text: 'Tutorial', onClick: this.startTutorial.bind(this) })
     let instructions = createElement('a', { href: 'https://boardgamegeek.com/boardgame/131357/coup', target: '_blank', text: '<button>How To Play</button>' })
-    let buttons = createElement('div', { class: 'main-menu-buttons' }, startButton, instructions);
+    let buttons = createElement('div', { class: 'main-menu-buttons' }, startButton, tutorialButton, instructions);
     this.cardMenu.appendChild(buttons);
     this.rootEl.appendChild(this.cardMenu);
   }
@@ -24,8 +26,16 @@ export class MainMenu {
     ], {
       duration: 600
     });
-    // setTimeout(() => this.cardMenu.setAttribute('style', 'transform: translate(0px, -100px)'), 800);
     setTimeout(() => new Gameplay(this.rootEl), 600);
+  }
+
+  startTutorial() {
+    this.cardMenu.animate([
+      { transform: 'translate(0px, -800px)' },
+    ], {
+      duration: 600
+    });
+    setTimeout(() => new Tutorial(this.rootEl), 600);
   }
 }
 
