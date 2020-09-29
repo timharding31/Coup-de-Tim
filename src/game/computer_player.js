@@ -12,7 +12,8 @@ export default class ComputerPlayer extends Player {
     }
 
     this.numTurns = 0;
-    this.knowledge = this.updateKnowledge(this.cards)
+    this.knowledge = this.updateKnowledge(this.cards);
+    this.learnLostCard = this.learnLostCard.bind(this);
   }
 
   updateKnowledge(array) {
@@ -63,14 +64,19 @@ export default class ComputerPlayer extends Player {
   learnOpponentMove(action) {
     switch(action) {
       case 'Tax':
-        this.knowledge.dukes += 1;
+        this.knowledge.dukes += ((this.numTurns <= 2) ? 0.5 : 1);
         break
       case 'Steal':
-        this.knowledge.captains += 1;
+        this.knowledge.captains += 1
         break
       case 'Assassinate':
-        this.knowledge.assassins += 1;
+        this.knowledge.assassins += 1
         break
+      case 'Exchange':
+        this.knowledge.ambassadors += ((this.numTurns <= 2) ? 0.5 : 1);
+        break
+      case 'Foreign Aid':
+        this.knowledge.dukes = 0;
       default:
         break
     }
@@ -88,6 +94,8 @@ export default class ComputerPlayer extends Player {
       case 'Assassinate':
         this.knowledge.contessas += 1;
         break
+      default:
+        break
     }
   }
 
@@ -97,6 +105,12 @@ export default class ComputerPlayer extends Player {
       return 'Coup'
     } else if (this.decideCoup()) {
       return 'Coup'
+    } else if (this.opponent && this.opponent.coins >= 7 && this.cards.length <= 1) {
+      if (this.coins >= 3) {
+        return ['Assassinate', 'Steal'][Math.round(Math.random())]
+      } else {
+        return 'Steal'
+      }
     } else if (this.decideIncome()) {
       return 'Income'
     } else if (this.decideAssassinate()) {
@@ -123,7 +137,9 @@ export default class ComputerPlayer extends Player {
   }
 
   decideCoup() {
-    if (this.coins >= 7) {
+    if (this.coins >= 7 && this.opponent.cards.length <= 1) {
+      return true
+    } else if (this.coins >= 7) {
       return [true, false][Math.round(Math.random())]
     } else {
       return false
@@ -156,8 +172,14 @@ export default class ComputerPlayer extends Player {
 
   decideExchange() {
     if (this.cards.map(card => card.character).indexOf('Ambassador') >= 0) {
-      return ([true, false][Math.round(Math.random())] || [true, false][Math.round(Math.random())])
-    } else if (this.numTurns <= 3) {
+      if (this.cards.length <= 1) {
+        return true
+      } else {
+        return ([true, false][Math.round(Math.random())] || [true, false][Math.round(Math.random())])
+      }
+    } else if (this.cards <= 1) {
+      return false
+    } else if (this.numTurns <= 2) {
       return [true, false][Math.round(Math.random())]
     } else {
       return false
@@ -167,7 +189,9 @@ export default class ComputerPlayer extends Player {
   decideTax() {
     if (this.cards.map(card => card.character).indexOf('Duke') >= 0) {
       return ([true, false][Math.round(Math.random())] || [true, false][Math.round(Math.random())])
-    } else if (this.numTurns <= 3) {
+    } else if (this.cards.length <= 1) {
+      return false
+    } else if (this.numTurns <= 2) {
       return [true, false][Math.round(Math.random())]
     } else {
       return false
@@ -183,19 +207,21 @@ export default class ComputerPlayer extends Player {
   }
 
   decideChallenge(action) {
-    if (this.cards.length <= 1) {
+    if (this.cards.length <= 1 && this.opponent.coins < 6) {
       return false
+    } else if (this.cards.length <= 1 && this.opponent.cards.length >= 2 && this.opponent.coins >= 6) {
+      return ([true, false][Math.round(Math.random())] || [true, false][Math.round(Math.random())])
     } else {
       switch(action) {
         case 'Tax':
-          if (this.knowledge.dukes <= 1) {
-            return true
+          if (this.knowledge.dukes <= 2) {
+            return [true, false][Math.round(Math.random())]
           } else {
             return false
           }
         case 'Steal':
-          if (this.knowledge.captains <= 1) {
-            return true
+          if (this.knowledge.captains <= 2) {
+            return [true, false][Math.round(Math.random())]
           } else {
             return false
           }
@@ -206,8 +232,8 @@ export default class ComputerPlayer extends Player {
             return false
           }
         case 'Exchange':
-          if (this.knowledge.ambassadors <= 1) {
-            return true
+          if (this.knowledge.ambassadors <= 2) {
+            return [true, false][Math.round(Math.random())]
           } else {
             return false
           }
@@ -249,7 +275,7 @@ export default class ComputerPlayer extends Player {
   decideBlockChallenge(blockAction) {
     switch(blockAction) {
       case 'Foreign Aid':
-        return false
+        return ([true, false][Math.round(Math.random())] && [true, false][Math.round(Math.random())])
       case 'Steal':
         if ((this.knowledge.captains + this.knowledge.ambassadors) <= 3) {
           return true
@@ -257,8 +283,8 @@ export default class ComputerPlayer extends Player {
           return ([true, false][Math.round(Math.random())] && [true, false][Math.round(Math.random())])
         }
       case 'Assassinate':
-        if (this.knowledge.contessas <= 1) {
-          return true
+        if (this.knowledge.contessas <= 2) {
+          return [true, false][Math.round(Math.random())]
         } else {
           return ([true, false][Math.round(Math.random())] && [true, false][Math.round(Math.random())])
         }

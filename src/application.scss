@@ -6,7 +6,6 @@
 @import './stylesheets/cards.scss';
 @import './stylesheets/controls.scss';
 @import './stylesheets/game.scss';
-@import './stylesheets/modal.scss';
 @import './stylesheets/menu.scss';
 
 #root {
@@ -20,3 +19,5 @@
   justify-content: flex-start;
   align-items: center;
 }
+
+button:disabled { filter: grayscale(80%); }

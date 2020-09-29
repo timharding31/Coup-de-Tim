@@ -263,6 +263,10 @@
 }
 
 #discard-pile > #card {
-  transform: scale(0.6);
+  width: 120px;
+  height: 168px;
+  margin-right: 5%;
   filter: grayscale(80%);
+  &>ul { visibility: hidden }
+  &>h2 { visibility: hidden }
 }

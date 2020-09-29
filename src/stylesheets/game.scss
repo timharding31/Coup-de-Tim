@@ -83,10 +83,11 @@
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+  min-width: 10%;
   padding-top: 5%;
-  padding-bottom: 5%;
   align-items: center;
   flex-wrap: wrap-reverse;
+  align-content: center;
 }
 
 #discard-pile {
@@ -94,6 +95,9 @@
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 5%;
+  flex-wrap: wrap;
 }
 
 .coin {

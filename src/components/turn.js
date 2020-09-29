@@ -71,6 +71,8 @@ export default class Turn {
     if (this.currentPlayer.isComputer) {
       let announcement = computerPlayerChoice(this.action);
       this.currentPlayer.renderControls(announcement);
+    } else {
+      this.currentTarget.learnOpponentMove(this.action);
     }
 
     if (challengeable || blockable) {
@@ -109,11 +111,11 @@ export default class Turn {
         blockChallenge.remove();
         this.domState = this.domState.refresh();
         if (this.domState.playerWasBlocked) {
+          this.currentPlayer.learnOpponentBlock(this.action);
           this.promptPlayerForChallenge();
         } else if (this.domState.playerWasChallenged) {
           if (this.playerWonChallengeIdx >= 0) {
             this.currentPlayer.reshuffleCard(this.playerWonChallengeIdx);
-            this.currentPlayer.flipAllCardsUp();
             this.promptTargetForLostChallengeChoice();
           } else {
             this.promptPlayerForLostChallengeChoice();
@@ -139,7 +141,6 @@ export default class Turn {
         if (computerChallenged) {
           if (this.playerWonChallengeIdx >= 0) {
             this.currentPlayer.reshuffleCard(this.playerWonChallengeIdx);
-            this.currentPlayer.flipAllCardsUp();
             this.promptTargetForLostChallengeChoice();
           } else {
             this.promptPlayerForLostChallengeChoice();
@@ -183,7 +184,10 @@ export default class Turn {
     if (this.currentPlayer.isComputer) {
       let blockWasChallenged = this.currentPlayer.decideBlockChallenge(this.action);
       if (blockWasChallenged) {
-        let announcement = computerPlayerChoice(`Challenge BLOCK`);
+        let announcement = computerPlayerChoice(`Challenge Block`);
+        this.currentPlayer.renderControls(announcement);
+      } else {
+        let announcement = computerPlayerChoice('Fine, be that way');
         this.currentPlayer.renderControls(announcement);
       }
       setTimeout(() => {
@@ -197,7 +201,7 @@ export default class Turn {
         } else {
           this.playerDidKill = false;
           this.playerDidSteal = false;
-          this.playerDidReceive = true;
+          this.playerDidReceive = false;
           this.complete = true;
         }
       }, 1000);
@@ -218,7 +222,7 @@ export default class Turn {
         } else {
           this.playerDidKill = false;
           this.playerDidSteal = false;
-          this.playerDidReceive = true;
+          this.playerDidReceive = false;
           this.complete = true;
         }
       })
@@ -238,6 +242,8 @@ export default class Turn {
         this.endTurn();
       }, 1000);
     } else {
+      let announcement = computerPlayerChoice(`Won Challenge`);
+      this.currentTarget.renderControls(announcement);
       this.playerLostChallenge = true;
       let lostChallengeForm = loseCardSelector('challenge', this.currentPlayer);
       this.currentPlayer.renderControls(lostChallengeForm);
@@ -258,12 +264,10 @@ export default class Turn {
       let announcement = computerPlayerChoice(`Won Challenge`);
       this.currentPlayer.renderControls(announcement);
       this.targetLostChallenge = true;
-      this.currentTarget.flipAllCardsUp();
       let lostChallengeForm = loseCardSelector('challenge', this.currentTarget);
       this.currentTarget.renderControls(lostChallengeForm);
       lostChallengeForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        this.currentTarget.flipAllCardsDown();
         lostChallengeForm.remove();
         this.domState = this.domState.refresh();
         this.targetLostChallengeIdx = this.domState.targetLostChallengeIdx;
@@ -284,15 +288,17 @@ export default class Turn {
 
   // ask target to choose card after Assassination or Coup
   promptTargetForKillChoice() {
+    if (this.currentTarget.cards.length <= 0) {
+      this.endTurn();
+      return
+    }
     if (this.currentPlayer.isComputer) {
-      let announcement = computerPlayerChoice(`${this.action} Successful`);
+      let announcement = computerPlayerChoice(`${this.action}`);
       this.currentPlayer.renderControls(announcement);
-      this.currentTarget.flipAllCardsUp();
       let killForm = loseCardSelector('action', this.currentTarget);
       this.currentTarget.renderControls(killForm);
       killForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        this.currentTarget.flipAllCardsDown();
         killForm.remove();
         this.domState = this.domState.refresh();
         this.killIdx = this.domState.killIdx;

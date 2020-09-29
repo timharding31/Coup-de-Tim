@@ -90,31 +90,20 @@
   margin: 15% 5%;
   border-radius: 20px;
   display: flex;
-  padding-top: 20%;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
-  position: relative;
-  overflow: hidden;
-  background-size: 200%;
-  background-repeat: repeat;
-  border: 1px solid $cdt-blue-gray-border;
-  box-shadow: inset 0px 0px 30px 5px $cdt-blue-gray, 0 0 10px 0 $cdt-black-shadow;
   box-sizing: border-box;
   &>h2 {
-    position: absolute;
-    transform: rotate(180deg);
+    transform: rotate(-5deg);
     margin: 0;
     padding: 0;
-    right: 2.5%;
-    top: 5%;
-    bottom: auto;
-    left: auto;
-    font-size: 285%;
-    text-shadow: 0.25px 0.25px 0.5px $cdt-black-shadow;
+    font-size: 250%;
+    color: $cdt-yellow;
+    text-align: center;
+    -webkit-text-stroke: 1px $cdt-red;
     font-weight: 700;
     z-index: 0;
-    writing-mode: vertical-lr;
   }
 }
 
@@ -199,5 +188,80 @@
     border: none;
     cursor: pointer;
     &:hover { transform: scale(1.1); text-shadow: 0.5px 0.5px 0px $cdt-white-shadow; }
+  }
+}
+
+#game-over {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding-top: 15%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  z-index: 100;
+  background-color: $cdt-blue-gray;
+  &>div#game-over-background {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    opacity: 0.4;
+    z-index: 90;
+    background-size: 30% 30%;
+    background-repeat: repeat;
+    background-repeat: repeat;
+  }
+  &>*:not(:first-child) {
+    z-index: 100;
+  }
+  &>.game-over-header {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    &>p:first-child {
+      font-family: 'Dancing Script', cursive;
+      transform: rotate(-5deg);
+      font-size: 500%;
+      color: $cdt-yellow;
+      text-align: center;
+      -webkit-text-stroke: 1px $cdt-red;
+      text-shadow: 0px 0px 10px $cdt-white-shadow;
+      font-weight: 700;
+      margin-top: -10%;
+      margin-bottom: 10%;
+    }
+    &>p:last-child {
+      text-align: center;
+      text-shadow: 1px 1px 1px rgba(255, 253, 244, 0.25);
+      font-size: 100%;
+      padding: 2.5% 4%;
+      font-weight: 600;
+      color: $cdt-red;
+      margin-top: 5%;
+      border-bottom: 2px solid $cdt-red;
+    }
+  }
+  &>button {
+    border-radius: 25px;
+    width: 100px;
+    height: 25px;
+    color: $cdt-red;
+    background-color: $cdt-white;
+    font-weight: 700;
+    font-size: 100%;
+    border: none;
+    outline: none;
+    margin-top: 1%;
+    text-shadow: 0.25px 0.25px $cdt-black;
+    box-shadow: 0 0 5px $cdt-black-shadow;
+    cursor: pointer;
+    &:hover {
+      background-color: $cdt-red;
+      color: $cdt-white;
+    }
   }
 }

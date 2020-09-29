@@ -14,7 +14,8 @@ export default (player) => {
     'button',
     {
       text: 'Submit',
-      style: `background-image: url('${greenBrushstroke.default}')`
+      style: `background-image: url('${greenBrushstroke.default}')`,
+      disabled: 'disabled'
     }
   );
   form.appendChild(submitButton);
@@ -32,10 +33,16 @@ export default (player) => {
     card.classList.toggle('exchangeable');
     card.addEventListener('click', (e) => {
       e.preventDefault();
-      card.classList.toggle('exchanged');
       let array = (gameRoot.dataset.exchangeIndices) ? JSON.parse(gameRoot.dataset.exchangeIndices) : [];
-      array.push(idx);
+      if (!card.classList.contains('exchanged')) array.push(idx);
+      while (array.length > 2) {
+        array = array.slice(1);
+      }
+      card.classList.toggle('exchanged');
       gameRoot.dataset.exchangeIndices = JSON.stringify(array);
+      if (array.length === 2) {
+        submitButton.removeAttribute('disabled');
+      }
     })
   });
 

@@ -19,7 +19,8 @@ export default (cause, player) => {
     'button',
     {
       text: 'Submit',
-      style: `background-image: url('${redBrushstroke.default}')`
+      style: `background-image: url('${redBrushstroke.default}')`,
+      disabled: 'disabled'
     }
   );
   form.appendChild(submitButton);
@@ -37,8 +38,14 @@ export default (cause, player) => {
     card.classList.toggle('selectable');
     card.addEventListener('click', (e) => {
       e.preventDefault();
+      if (card.classList.contains('selected')) {
+        gameRoot.removeAttribute('data-kill-idx');
+        submitButton.setAttribute('disabled', 'disabled');
+      } else {
+        submitButton.removeAttribute('disabled');
+        gameRoot.dataset.killIdx = idx;
+      }
       card.classList.toggle('selected');
-      gameRoot.dataset.killIdx = idx;
     })
   });
 

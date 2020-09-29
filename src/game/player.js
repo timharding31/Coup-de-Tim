@@ -34,12 +34,10 @@ export default class Player {
 
   flipAllCardsUp() {
     this.cards.forEach(card => card.flipUp());
-    this.render();
   }
 
   flipAllCardsDown() {
     this.cards.forEach(card => card.flipDown());
-    this.render();
   }
 
   payCoins(num) {
@@ -65,12 +63,15 @@ export default class Player {
   loseCard(idx) {
     let lostCard = this.cards[idx];
     this.cards = this.cards.filter((_, i) => (i != idx));
-    lostCard.flipUp();
     this.upCards.push(lostCard);
+    if (this.opponent && !this.isComputer && lostCard) {
+      this.opponent.learnLostCard(lostCard.character);
+    }
     this.render();
   }
 
   reshuffleCard(idx) {
+    if (this.opponent.cards.length <= 0) return
     let reshuffledCard = this.cards[idx];
     this.cards = this.cards.filter((_, i) => (i != idx));
     this.game.courtDeck.returnCard(reshuffledCard);
@@ -80,11 +81,11 @@ export default class Player {
 
   exchangePartOne() {
     this.cards = this.cards.concat(this.game.courtDeck.deal(2));
-    this.flipAllCardsUp();
     this.render();
   }
 
   exchangePartTwo(idx1, idx2) {
+    [idx1, idx2].forEach(idx => this.game.courtDeck.returnCard(this.cards[idx]))
     this.cards = this.cards.filter((_, i) => (i != idx1 && i != idx2));
     this.render();
   }
@@ -96,6 +97,14 @@ export default class Player {
   }
 
   render() {
+    if (this.isComputer) {
+      this.flipAllCardsDown();
+    } else {
+      this.flipAllCardsUp();
+    }
+    if (this.game.gameOver) {
+      this.flipAllCardsUp();
+    }
     let playerControls = createElement('div', { id: 'player-controls' });
     let hand = createElement('div',
       { id: 'player-cards' },
@@ -104,6 +113,7 @@ export default class Player {
     let discardPile = createElement('div', { id: 'discard-pile' });
     if (this.upCards.length > 0) {
       this.upCards.forEach(card => {
+        if (!card) return
         card.flipUp();
         let renderedCard = card.render();
         discardPile.appendChild(renderedCard);
