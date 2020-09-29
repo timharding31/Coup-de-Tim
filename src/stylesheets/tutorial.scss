@@ -131,12 +131,10 @@ div[id^=tutorial-tip-].top::after {
 }
 
 .darkened {
-  filter: grayscale(0.5);
+  filter: grayscale(0.6) brightness(0.8);
 }
 
 .spotlit {
-  filter: grayscale(0);
-  transform: scale(1);
   animation-name: pulse;
   animation-duration: 1s;
   animation-iteration-count: infinite;
@@ -148,16 +146,16 @@ div[id^=tutorial-tip-].top::after {
   top: 27.5%;
   bottom: auto;
   width: 12.5%;
-  height: 20%;
+  height: 18%;
 }
 
 #tutorial-tip-2 {
   right: auto;
-  left: 11%;
-  top: 52%;
+  left: 7.5%;
   bottom: auto;
+  top: 52%;
   width: 40%;
-  height: 12.5%;
+  height: 10%;
 }
 
 #tutorial-tip-3 {
@@ -181,10 +179,10 @@ div[id^=tutorial-tip-].top::after {
 #tutorial-tip-5 {
   right: auto;
   left: 15%;
-  bottom: 5%;
+  bottom: 10%;
   top: auto;
-  width: 10%;
-  height: 35%;
+  width: 12.5%;
+  height: 30%;
 }
 
 #tutorial-tip-6 {
