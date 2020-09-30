@@ -13,9 +13,9 @@ export class MainMenu {
     removeAllChildNodes(rootEl);
     this.cardMenu = createFaceDownCard();
     this.cardMenu.setAttribute('id', 'main-menu');
-    let startButton = createElement('button', { id: 'start-game', text: 'Start Game', onClick: this.startGame.bind(this) })
-    let tutorialButton = createElement('button', { id: 'start-tutorial', text: 'Tutorial', onClick: this.startTutorial.bind(this) })
-    let instructionsButton = createElement('button', { id: 'start-instructions', text: 'Instructions', onClick: this.startInstructions.bind(this) })
+    let instructionsButton = createElement('button', { id: 'start-instructions', text: 'Instructions', onClick: this.startInstructions.bind(this) });
+    let tutorialButton = createElement('button', { id: 'start-tutorial', text: 'Tutorial', onClick: this.startTutorial.bind(this) });
+    let startButton = createElement('button', { id: 'start-game', text: 'Start Game', onClick: this.startGame.bind(this) });
     let buttons = createElement('div', { class: 'main-menu-buttons' }, instructionsButton, tutorialButton, startButton);
     this.cardMenu.appendChild(buttons);
     this.rootEl.appendChild(this.cardMenu);

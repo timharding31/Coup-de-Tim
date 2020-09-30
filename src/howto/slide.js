@@ -180,7 +180,7 @@ export default (type) => {
       let allSlides = [...slideRoot.childNodes];
       let lastSlide = allSlides[allSlides.length - 1];
       lastSlide.animate([
-        { transform: 'translate(0px, -560px) scale(0.5)' },
+        { transform: 'translate(0px, -550px) scale(0.45)' },
       ], {
         duration: 500
       });
