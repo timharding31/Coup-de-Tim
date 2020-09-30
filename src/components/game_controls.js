@@ -14,7 +14,7 @@ const characterOptions = [dukeOptions, assassinOptions, ambassadorOptions, capta
 const constOptions = [
   { action: 'Income', symbol: incomeSymbol.default, effect: 'Take 1 Coin', backgroundColor: 'rgba(218, 166, 65, 0.5)' },
   { action: 'Foreign Aid', symbol: foreignAidSymbol.default, effect: 'Take 2 Coins', backgroundColor: 'rgba(138, 49, 123, 0.5)' },
-  { action: 'Coup', symbol: coupSymbol.default, effect: 'Pay 7 coins to coup another player', backgroundColor: 'rgba(55, 97, 113, 0.5)' }
+  { action: 'Coup', symbol: coupSymbol.default, effect: 'Pay 7 coins to Coup another player', backgroundColor: 'rgba(55, 97, 113, 0.5)' }
 ];
 
 let allOptions = [...constOptions, ...characterOptions];
