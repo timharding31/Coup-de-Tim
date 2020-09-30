@@ -23,6 +23,8 @@
   transition: visibility 1s, box-shadow 1s;
 }
 
+#slide.invisible #card { visibility: hidden }
+
 #slide-background-image {
   position: absolute;
   top: 0;
