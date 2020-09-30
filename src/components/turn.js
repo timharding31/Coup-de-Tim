@@ -115,7 +115,9 @@ export default class Turn {
           this.promptPlayerForChallenge();
         } else if (this.domState.playerWasChallenged) {
           if (this.playerWonChallengeIdx >= 0) {
-            this.currentPlayer.reshuffleCard(this.playerWonChallengeIdx);
+            if (this.currentTarget.cards.length >= 2) {
+              this.currentPlayer.reshuffleCard(this.playerWonChallengeIdx);
+            }
             this.promptTargetForLostChallengeChoice();
           } else {
             this.promptPlayerForLostChallengeChoice();
@@ -140,7 +142,9 @@ export default class Turn {
       setTimeout(() => {
         if (computerChallenged) {
           if (this.playerWonChallengeIdx >= 0) {
-            this.currentPlayer.reshuffleCard(this.playerWonChallengeIdx);
+            if (this.currentTarget.cards.length >= 2) {
+              this.currentPlayer.reshuffleCard(this.playerWonChallengeIdx);
+            }
             this.promptTargetForLostChallengeChoice();
           } else {
             this.promptPlayerForLostChallengeChoice();
@@ -193,7 +197,9 @@ export default class Turn {
       setTimeout(() => {
         if (blockWasChallenged) {
           if (this.targetWonChallengeIdx >= 0) {
-            this.currentTarget.reshuffleCard(this.targetWonChallengeIdx);
+            if (this.currentPlayer.cards.length >= 2) {
+              this.currentTarget.reshuffleCard(this.targetWonChallengeIdx);
+            }
             this.promptPlayerForLostChallengeChoice();
           } else {
             this.promptTargetForLostChallengeChoice();
@@ -214,7 +220,9 @@ export default class Turn {
         this.domState = this.domState.refresh();
         if (this.domState.targetWasChallenged) {
           if (this.targetWonChallengeIdx >= 0) {
-            this.currentTarget.reshuffleCard(this.targetWonChallengeIdx);
+            if (this.currentPlayer.cards.length >= 2) {
+              this.currentTarget.reshuffleCard(this.targetWonChallengeIdx);
+            }
             this.promptPlayerForLostChallengeChoice();
           } else {
             this.promptTargetForLostChallengeChoice();
