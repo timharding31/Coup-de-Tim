@@ -1,10 +1,7 @@
 import './application.scss';
 import createElement from './util/create_element';
-
 import { MainMenu } from './navigation/main_menu';
 const stucco = require('./assets/images/stucco_texture.png');
-
-import Card from './game/card';
 
 const root = createElement('div', { id: 'root', style: `background-image: url("${stucco.default}")` });
 
