@@ -23,7 +23,10 @@
   transition: visibility 1s, box-shadow 1s;
 }
 
-#slide.invisible #card { visibility: hidden }
+#slide.invisible #slide-area #card,
+#slide.invisible #slide-area button,
+#slide.invisible #slide-area table
+ { visibility: hidden }
 
 #slide-background-image {
   position: absolute;
