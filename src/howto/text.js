@@ -9,7 +9,7 @@ import contessaOptions from '../assets/characters/contessa';
 // const coupSymbol = require('../images/symbols/coup.png');
 
 export const introParagraph = [
-  'In the not too distant future, the government is run for profit by a new "royal class" of multi-national CEOs. Their greed and absolute control of the economy has reduced all but a privileged few to lives of poverty and desperation.Out of the oppressed masses rose The Resistance, an underground organisation focused on overthrowing these powerful rulers. The valiant efforts of The Resistance have created discord, intrigue and weakness in the political courts of the noveau royal, bringing the government to brink of collapse.',
+  'In the not too distant future, the government is run for profit by a new "royal class" of multi-national CEOs. Their greed and absolute control of the economy has reduced all but a privileged few to lives of poverty and desperation. Out of the oppressed masses rose The Resistance, an underground organization focused on overthrowing these powerful rulers. The valiant efforts of The Resistance have created discord, intrigue and weakness in the political courts of the noveaux-royal, bringing the government to brink of collapse.',
   'But for you, a powerful government official, this is your opportunity to manipulate, bribe and bluff your way into absolute power. To be successful, you must destroy the influence of your rivals and drive them into exile. In these turbulent times there is only room for one to survive.'
 ];
 
@@ -107,6 +107,6 @@ export const challenges = [
   '<strong>If a player is challenged they must prove they had the required influence by showing the relevant character is one of their face-down cards.</strong> If they can\'t, or do not wish to, prove it, they lose the challenge.If they can, the challenger loses.',
   '<strong>Whoever loses the challenge immediately loses an influence.</strong>',
   'If a player wins a challenge by showing the relevant character card, they first return that card to the Court deck, re-shuffle the Court deck and take a random replacement card. (That way they have not lost influence and other players do not know the new influence card they have)',
-  'If an action is successfully challenged the entire action fails, but any coins paid as the cost of the action are granted to the Treasury.'
+  'If an action is successfully challenged the entire action fails, but any coins paid as the cost of the action remain spent.'
 ];
 
